@@ -5,6 +5,26 @@ on:
 
 jobs:
   create-issue-team-member-1:
+    name: Create Jira issue for Team Member 1
+    runs-on: ubuntu-latest
+    if: github.actor == 'dongwook98'
+    steps:
+      - name: Login
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_TEAMMEMBER1 }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL_TEAMMEMBER1 }}
+
+      - name: Create Issue
+        uses: atlassian/gajira-create@v3
+        with:
+          project: KAN
+          issuetype: Task
+          summary: "${{ github.event.issue.title }}"
+          description: "${{ github.event.issue.html_url }}"
+
+  create-issue-team-member-2:
     name: Create Jira issue for Team Member 2
     runs-on: ubuntu-latest
     if: github.actor == 'whdudgms'
@@ -25,6 +45,26 @@ jobs:
           description: "${{ github.event.issue.html_url }}"
 
   create-issue-team-member-3:
+    name: Create Jira issue for Team Member 3
+    runs-on: ubuntu-latest
+    if: github.actor == 'minpppal'
+    steps:
+      - name: Login
+        uses: atlassian/gajira-login@v3
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN_TEAMMEMBER3 }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL_TEAMMEMBER3 }}
+
+      - name: Create Issue
+        uses: atlassian/gajira-create@v3
+        with:
+          project: KAN
+          issuetype: Task
+          summary: "${{ github.event.issue.title }}"
+          description: "${{ github.event.issue.html_url }}"
+
+  create-issue-team-member-4:
     name: Create Jira issue for Team Member 4
     runs-on: ubuntu-latest
     if: github.actor == 'yebinnnnn'
