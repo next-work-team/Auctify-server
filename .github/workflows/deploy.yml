@@ -39,7 +39,7 @@ jobs:
         run: docker build -t auctify-server .
 
       - name: Docker 이미지에 Tag 붙이기
-        run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify-server:latest
+        run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
 
       - name: ECR에 Docker 이미지 Push
         run: docker push ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop auctify-server || true
-            docker rm auctify-server || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/auctify-server:latest
-            docker run -d -p --name auctify-server -p 8080:8080 ${{ steps.login-ecr.outputs.registry}}/auctify-server:latest
+            docker stop auctify_server || true
+            docker rm auctify_server || true
+            docker pull ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
+            docker run -d --name auctify_server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
