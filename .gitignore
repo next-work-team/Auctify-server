@@ -35,3 +35,13 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Gradle 빌드 관련 임시 파일 무시
+buildOutputCleanup.lock
+
+# IDE 설정 파일 무시 (JetBrains IDE - IntelliJ IDEA, PyCharm 등)
+*.xml
+
+# workspace.xml을 명확하게 제외
+.idea/workspace.xml
+
