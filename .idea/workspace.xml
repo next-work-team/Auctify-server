@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="04a3a454-5e35-4c08-b561-8bf38a64d85c" name="변경" comment="">
-      <change afterPath="$PROJECT_DIR$/.github/workflows/deploy.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/org/example/auctify/controller/HelloTestController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/create-jira-issue.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/create-jira-issue.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.github/workflows/pr-title-update.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/pr-title-update.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -121,7 +119,7 @@
       <option name="presentableId" value="Default" />
       <updated>1703336292430</updated>
       <workItem from="1739756659626" duration="93000" />
-      <workItem from="1739757078068" duration="3942000" />
+      <workItem from="1739757078068" duration="4268000" />
     </task>
     <servers />
   </component>
