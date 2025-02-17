@@ -1,5 +1,7 @@
 HELP.md
 .gradle
+.gradle/*
+.gradle/buildOutputCleanup
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -36,6 +38,16 @@ out/
 ### VS Code ###
 .vscode/
 
+### yml ###
+src/main/resources/application-jwt.yml
+src/main/resources/application-s3.yml
+src/main/resources/application-oauth2.yml
+src/main/resources/application-local.yml
+src/test/resources/application-test.yml
+
+###.env###
+.env
+
 # Gradle 빌드 관련 임시 파일 무시
 buildOutputCleanup.lock
 
@@ -44,4 +56,6 @@ buildOutputCleanup.lock
 
 # workspace.xml을 명확하게 제외
 .idea/workspace.xml
+
+*.lock
 
