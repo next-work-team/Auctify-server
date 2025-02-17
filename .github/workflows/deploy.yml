@@ -42,7 +42,7 @@ jobs:
         run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify-server:latest
 
       - name: ECR에 Docker 이미지 Push
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/auctify-server:latest
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
 
       - name: SSH로 EC2에  접속하기
         uses: appleboy/ssh-action@v1.0.3
