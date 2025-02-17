@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="04a3a454-5e35-4c08-b561-8bf38a64d85c" name="변경" comment="">
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -119,7 +120,7 @@
       <option name="presentableId" value="Default" />
       <updated>1703336292430</updated>
       <workItem from="1739756659626" duration="93000" />
-      <workItem from="1739757078068" duration="4268000" />
+      <workItem from="1739757078068" duration="4484000" />
     </task>
     <servers />
   </component>
