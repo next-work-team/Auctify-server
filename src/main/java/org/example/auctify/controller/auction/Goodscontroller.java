@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auction")
 public class Goodscontroller {
 
-    @GetMapping("/{goodsId}")
-    public ResponseEntity<GoodsResponseDTO>getItem(){
-    }
+//    @GetMapping("/{goodsId}")
+//    public ResponseEntity<GoodsResponseDTO>getItem(){
+//    }
 }
