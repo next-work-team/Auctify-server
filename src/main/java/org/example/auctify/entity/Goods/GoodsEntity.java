@@ -40,9 +40,6 @@ public class GoodsEntity extends BaseTimeEntity {
     @Size(min=20, max=2000)
     private String goodsDescription;
 
-    @Column(name="category_type", nullable = false)
-    private String categoryType;
-
     @Column(name="buy_now_price")
     private Long buyNowPrice;
 
