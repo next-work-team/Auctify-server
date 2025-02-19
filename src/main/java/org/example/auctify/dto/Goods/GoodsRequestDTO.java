@@ -14,6 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class GoodsRequestDTO {
 
+    @NotBlank(message = "등록하는 유저id 는 필수입니다.")
+    private Long userId;
+
     @NotBlank(message = "상품 이름은 필수입니다.")
     @Size(min = 1, max = 10, message = "상품 이름은 1~10자 이내여야 합니다.")
     private String goodsName;
