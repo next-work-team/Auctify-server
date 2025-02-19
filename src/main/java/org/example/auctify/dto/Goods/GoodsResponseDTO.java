@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ public class GoodsResponseDTO {
     @Schema(description = "상품id입니다.")
     private Long goodsId;
 
-    @Schema(description = "상품id입니다.")
+    @Schema(description = " 상품(경매) 이름입니다.")
     private String goodsName;
 
     @Schema(description = "상품 설명입니다.")
@@ -36,5 +37,8 @@ public class GoodsResponseDTO {
     private Long userId;
     @Schema(description = "상품 카테고리 id 입니다.")
     private Long categoryId;
+
+    @Schema(description = "포함된 상품 사진들입니다.")
+    private List<String> imageUrls;
 
 }
