@@ -18,13 +18,23 @@ repositories {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'com.github.gavlyukovskiy:datasource-decorator-spring-boot-autoconfigure:1.9.0'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+    // jpa sql 실행될 때 파라미터까지 보기위한 p6spy 의존성
     implementation 'p6spy:p6spy:3.9.1'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // devtools 의존성(자동 빌드 제공)
+    // developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    // oauth2 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+    // 스프링 시큐리티 의존성
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // jwt 관련 의존성
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
     // H2
     runtimeOnly 'com.h2database:h2'
     // MySQL
