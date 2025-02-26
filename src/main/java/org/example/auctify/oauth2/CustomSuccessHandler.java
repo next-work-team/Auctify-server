@@ -12,6 +12,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
+import org.springframework.security.web.savedrequest.CookieRequestCache;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,6 +26,7 @@ import java.util.Iterator;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
+    private final RequestCache requestCache = new HttpSessionRequestCache();
 
     public CustomSuccessHandler(JWTUtil jwtUtil) {
         this.jwtUtil = jwtUtil;
@@ -45,7 +50,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         System.out.println("TEST  123");
         response.addCookie(createCookie("Authorization", token));
-        response.sendRedirect("http://localhost:3000/");
+        // 사용자가 원래 요청했던 URL 가져오기
+        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "http://localhost:3000/";
+
+        System.out.println("리디렉션할 URL: " + targetUrl);
+
+        response.sendRedirect(targetUrl);
 
 
 

@@ -42,6 +42,9 @@ public class JWTFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             // 조건이 해당되면 메서드 종료(필수)
             return;
+        } else{
+            System.out.println("authorization token이 있습니다.");
+
         }
 
         //토큰
@@ -54,6 +57,9 @@ public class JWTFilter extends OncePerRequestFilter {
 
             // 조건이 해당되면 메소드 종료(필수)
             return;
+        }else{
+            System.out.println("token이 유효합니다");
+
         }
 
         //토근에서 oauthId, nickname, role 획득

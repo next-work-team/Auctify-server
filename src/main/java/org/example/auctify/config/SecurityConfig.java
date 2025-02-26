@@ -87,12 +87,10 @@ public class SecurityConfig {
         // 글로벌 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        // API 권한 설정
-                        .requestMatchers("/", "/**").permitAll()
-                        .requestMatchers("/", "/oauth2/**", "/login/oauth2/**", "/favicon.ico" ).permitAll() // ✅ OAuth 경로 허용
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/my").hasRole("USER")
-                        .anyRequest().authenticated());
+                        .requestMatchers("/", "/oauth2/**", "/login/oauth2/**", "/favicon.ico").permitAll() // ✅ 명확하게 허용할 것만 작성
+                        .requestMatchers("/my").hasRole("USER")  // ✅ USER 권한 필요
+                        .anyRequest().authenticated());  // ✅ 나머지는 인증 필요
+
 
         // 세션 설정 : STATELESS
         http
