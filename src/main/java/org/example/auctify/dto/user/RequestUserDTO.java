@@ -35,7 +35,7 @@ public class RequestUserDTO {
     @Schema(description = "이미지 주소")
     private String image;
 
-    @Schema(description = "이미지 주소")
+    @Schema(description = "프로필 소개")
     private String introduction;
 
 }
