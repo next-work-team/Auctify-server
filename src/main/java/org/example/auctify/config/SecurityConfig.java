@@ -8,11 +8,12 @@ import org.example.auctify.service.user.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -75,7 +76,7 @@ public class SecurityConfig {
 
         //JWTFilter 추가
         http
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2AuthorizationCodeGrantFilter.class);
 
         // oauth2
         http
@@ -87,7 +88,8 @@ public class SecurityConfig {
         // 글로벌 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/", "/oauth2/**", "/login/oauth2/**", "/favicon.ico").permitAll() // ✅ 명확하게 허용할 것만 작성
+                        .requestMatchers("/","/login","/oauth2/**", "/login/oauth2/**", "/favicon.ico","/presigned","123","/swagger-ui.html").permitAll() // ✅ 명확하게 허용할 것만 작성
+                        .requestMatchers(HttpMethod.POST,"/presigned").permitAll()
                         .requestMatchers("/my").hasRole("USER")  // ✅ USER 권한 필요
                         .anyRequest().authenticated());  // ✅ 나머지는 인증 필요
 
