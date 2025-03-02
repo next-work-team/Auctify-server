@@ -9,10 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.auctify.dto.Goods.GoodsRequestDTO;
 import org.example.auctify.dto.Goods.GoodsResponseDTO;
-import org.hibernate.query.Page;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.awt.print.Pageable;
 import java.util.Arrays;
 import java.util.List;
 
@@ -23,8 +25,8 @@ import java.util.List;
  */
 
 @RestController
-@RequestMapping("/api/auction")
-public class Goodscontroller {
+@RequestMapping("/api/auction") //검색,물품정보,물품 등록
+public class Goodscontroller{
 
     @Operation(summary = "물품 정보 반환", description = "경매 물품 정보 페이지 입니다.")
     @GetMapping("/{goodsId}")
@@ -50,6 +52,22 @@ public class Goodscontroller {
         //TODO
     }
 
-    //경매 아이템 목록반환 Page 로 할지?
+    //Pageable 로 반환, 페이지 사이즈는 요청에 따라 변경 가능
+    @Operation(summary = "물품 검색 결과창", description = "사용자가 물품을 검색하고, 페이지네이션으로 반환합니다.")
+    @ApiResponses(value={
+            @ApiResponse(responseCode = "201", description = "검색 성공",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = GoodsResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "해당 검색어에 해당 하는 제품이 없습니다.")
+    })
+    @PostMapping("/search")
+    public ResponseEntity <Page<GoodsResponseDTO>> searchGoods(
+            @RequestParam(required = true) String keyword, //단어 필수 입력
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ){
+        //TODO
+        return ResponseEntity.ok(null);
+    }
 
 }

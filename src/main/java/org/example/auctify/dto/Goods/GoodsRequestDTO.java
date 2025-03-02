@@ -1,6 +1,7 @@
 package org.example.auctify.dto.Goods;
 
 import jakarta.validation.constraints.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +13,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class GoodsRequestDTO {
 
     @NotBlank(message = "등록하는 유저id 는 필수입니다.")
