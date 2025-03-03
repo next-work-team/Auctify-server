@@ -26,10 +26,10 @@ public class LikeEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private UserEntity user;
+    private UserEntity userId;
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(nullable = false)
-    private GoodsEntity goods;
+    private GoodsEntity goodsId;
 
 }
