@@ -32,7 +32,7 @@ public class Goodscontroller{
     @GetMapping("/{goodsId}")
     public ResponseEntity<GoodsResponseDTO> getGoods(
             @Parameter(description = "조회할 물품 ID", example = "1")
-            @PathVariable("goodsId") String goodsId){
+            @PathVariable("goodsId") Long goodsId){
         return ResponseEntity.ok(null);
         //TODO
     }
@@ -68,6 +68,17 @@ public class Goodscontroller{
     ){
         //TODO
         return ResponseEntity.ok(null);
+    }
+
+    //사용자가 물품에 찜을 누를때
+    @Operation(summary = "사용자가 물품 찜 등록", description = "사용자가 해당 goodsId 를 찜에 저장합니다.")
+    @PostMapping("/like/{goodsId}")
+    public ResponseEntity<GoodsResponseDTO> likeGoods(
+            @Parameter(description = "좋아요 누를 물품 ID", example = "1")
+            @PathVariable("goodsId") Long goodsId){
+        return ResponseEntity.ok(null);
+
+        //likeService.likeGoods(goodsId);
     }
 
 }
