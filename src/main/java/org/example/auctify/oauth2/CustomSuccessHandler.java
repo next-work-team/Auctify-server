@@ -58,8 +58,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.sendRedirect(targetUrl);
 
-
-
     }
 
     private Cookie createCookie(String key, String value) {
