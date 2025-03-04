@@ -38,11 +38,23 @@ public class SecurityConfig {
     }
 
     @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*")); // ✅ 모든 도메인 허용
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 모든 HTTP 메서드 허용
+        configuration.setAllowCredentials(true); // ✅ 쿠키 포함 요청 허용
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 필요한 헤더 허용
+
+        return request -> configuration;
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 
         http
-                .cors((auth) -> auth.disable());
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // ✅ CORS 적용
 
 
         // csrf disable
