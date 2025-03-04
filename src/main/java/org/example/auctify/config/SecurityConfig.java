@@ -88,7 +88,8 @@ public class SecurityConfig {
         // 글로벌 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/","/login","/oauth2/**", "/login/oauth2/**", "/favicon.ico","/presigned","123","/swagger-ui.html").permitAll() // ✅ 명확하게 허용할 것만 작성
+                        .requestMatchers("/","/login","/oauth2/**", "/login/oauth2/**", "/favicon.ico","/presigned","123","/swagger-ui.html","/swagger-ui/**"
+                        , "/v3/api-docs/**", "/swagger-resources/**").permitAll() // ✅ 명확하게 허용할 것만 작성
                         .requestMatchers(HttpMethod.POST,"/presigned").permitAll()
                         .requestMatchers("/my").hasRole("USER")  // ✅ USER 권한 필요
                         .anyRequest().authenticated());  // ✅ 나머지는 인증 필요
