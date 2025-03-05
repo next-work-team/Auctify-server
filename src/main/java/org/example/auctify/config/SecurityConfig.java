@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,12 +42,15 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOriginPatterns(Collections.singletonList("*")); // ✅ 모든 도메인 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 모든 HTTP 메서드 허용
+        configuration.setAllowedOriginPatterns(Collections.singletonList("*")); // 모든 도메인 허용
+        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
         configuration.setAllowCredentials(true); // ✅ 쿠키 포함 요청 허용
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type")); // 필요한 헤더 허용
+        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie")); // ✅ 클라이언트가 토큰을 받을 수 있도록 허용
 
-        return request -> configuration;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+        return source;
     }
 
     @Bean
@@ -54,7 +58,7 @@ public class SecurityConfig {
 
 
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()));  // ✅ CORS 적용
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // ✅ CORS 설정 적용
 
 
         // csrf disable

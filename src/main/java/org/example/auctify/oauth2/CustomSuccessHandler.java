@@ -55,6 +55,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         System.out.println("리디렉션할 URL: " + targetUrl);
 
+
         response.sendRedirect(targetUrl);
 
     }
