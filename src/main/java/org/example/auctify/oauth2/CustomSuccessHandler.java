@@ -48,25 +48,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String token = jwtUtil.createJwt(oauthId, role, 60 * 60 * 60 * 60L);
 
-        response.addCookie(createCookie("Authorization", token));
+        response.addCookie(createCookie("Authorization", token, request));
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
         String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "http://localhost:3000/";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
 
-
         response.sendRedirect(targetUrl);
 
     }
 
-    private Cookie createCookie(String key, String value) {
+    private Cookie createCookie(String key, String value, HttpServletRequest request) {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60 * 60 * 60 * 60);
 
+        boolean isLocal = request.getServerName().contains("localhost");
+        cookie.setSecure(!isLocal); // 로컬 개발 환경에서는 Secure=false
+
         // Secure=false → 쿠키가 HTTP와 HTTPS 둘 다 전송됨 클라가 Https일때는 true
-        cookie.setSecure(false); // HTTPS가 아닐 때도 테스트할 수 있도록 설정
+        // HTTPS가 아닐 때도 테스트할 수 있도록 설정
 
         cookie.setPath("/"); // 도메인의 모든 페이지 경로에 쿠키를 전송하도록 지정
         cookie.setHttpOnly(true);
