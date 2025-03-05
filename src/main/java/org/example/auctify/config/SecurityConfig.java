@@ -53,7 +53,8 @@ public class SecurityConfig {
 
                         configuration.setAllowedOrigins(Arrays.asList(
                                 "https://localhost:3000",
-                                "https://auctify-client.vercel.app"
+                                "https://auctify-client.vercel.app",
+                                "https://auctify-client-beryl.vercel.app"
                         ));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
                         configuration.setAllowCredentials(true);

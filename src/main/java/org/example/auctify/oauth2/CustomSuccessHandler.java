@@ -51,11 +51,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(createCookie("Authorization", token, request));
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-        String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "https://localhost:3000/";
+        String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "https://auctify-client-beryl.vercel.app";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
 
         response.sendRedirect(targetUrl);
+
+        // ✅ 리디렉션 대신 JSON 응답 반환
+//        response.setContentType("application/json");
+//        response.setCharacterEncoding("UTF-8");
+//        response.getWriter().write("{\"message\": \"success\", \"token\": \"" + token + "\"}");
 
     }
 
