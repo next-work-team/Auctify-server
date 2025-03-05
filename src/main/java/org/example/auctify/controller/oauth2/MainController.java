@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 // 테스트용 모두 허용
+//
 @Controller
 public class MainController {
 
