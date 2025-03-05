@@ -71,6 +71,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setPath("/"); // 도메인의 모든 페이지 경로에 쿠키를 전송하도록 지정
         cookie.setHttpOnly(true);
 
+        cookie.setDomain("auctify.kro.kr"); // 도메인을 고정
+        // CORS 문제 해결 (리디렉션 후에도 쿠키 유지)
+        cookie.setAttribute("SameSite", "None");
+
         return cookie;
     }
 
