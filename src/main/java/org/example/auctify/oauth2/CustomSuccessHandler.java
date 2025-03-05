@@ -51,7 +51,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.addCookie(createCookie("Authorization", token, request));
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-        String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "http://localhost:3000/";
+        String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "https://localhost:3000/";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
 
@@ -64,8 +64,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60 * 60 * 60 * 60);
 
-        boolean isLocal = request.getServerName().contains("localhost");
-        cookie.setSecure(!isLocal); // 로컬 개발 환경에서는 Secure=false
+//        boolean isLocal = request.getServerName().contains("localhost");
+//        System.out.println(" secure options  : " + !isLocal);
+        cookie.setSecure(true); // 로컬 개발 환경에서는 Secure=false
 
         // Secure=false → 쿠키가 HTTP와 HTTPS 둘 다 전송됨 클라가 Https일때는 true
         // HTTPS가 아닐 때도 테스트할 수 있도록 설정

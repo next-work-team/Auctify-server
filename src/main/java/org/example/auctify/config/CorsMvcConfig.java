@@ -9,7 +9,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000", "https://auctify.kro.kr") // 정확한 도메인 지정
+                .allowedOrigins("https://localhost:3000", "https://auctify-client.vercel.app") // 정확한 도메인 지정
                 .allowedMethods("*") // 모든 HTTP 메서드 허용
                 .allowedHeaders("*") // 모든 헤더 허용
                 .allowCredentials(true) // ✅ 쿠키 전송 허용 (allowedOrigins("*")와 함께 사용 불가)

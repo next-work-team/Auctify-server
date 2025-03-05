@@ -38,27 +38,34 @@ public class SecurityConfig {
         this.jwtUtil = jwtUtil;
     }
 
-    @Bean
-    public CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-
-        configuration.setAllowedOriginPatterns(Collections.singletonList("*")); // 모든 도메인 허용
-        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Cache-Control", "Content-Type"));
-        configuration.setAllowCredentials(true); // ✅ 쿠키 포함 요청 허용
-        configuration.setExposedHeaders(Arrays.asList("Authorization", "Set-Cookie")); // ✅ 클라이언트가 토큰을 받을 수 있도록 허용
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
 
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())); // ✅ CORS 설정 적용
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(new CorsConfigurationSource() {
+
+                    @Override
+                    public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
+
+                        CorsConfiguration configuration = new CorsConfiguration();
+
+                        configuration.setAllowedOrigins(Arrays.asList(
+                                "https://localhost:3000",
+                                "https://auctify-client.vercel.app"
+                        ));
+                        configuration.setAllowedMethods(Collections.singletonList("*"));
+                        configuration.setAllowCredentials(true);
+                        configuration.setAllowedHeaders(Collections.singletonList("*"));
+                        configuration.setMaxAge(3600L);
+
+                        configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
+
+
+                        return configuration;
+                    }
+                }));
 
 
         // csrf disable
@@ -72,6 +79,9 @@ public class SecurityConfig {
         // Http Basic 인증 방식 disable
         http
                 .httpBasic((auth) -> auth.disable());
+
+        http
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
         //JWTFilter 추가
         http
@@ -88,16 +98,12 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests((auth) -> auth
                         .requestMatchers("/","/login","/oauth2/**", "/login/oauth2/**", "/favicon.ico","/presigned","123","/swagger-ui.html","/swagger-ui/**"
-                        , "/v3/api-docs/**", "/swagger-resources/**").permitAll() // ✅ 명확하게 허용할 것만 작성
+                        , "/v3/api-docs/**", "/swagger-resources/**", "/auth/**").permitAll() // ✅ 명확하게 허용할 것만 작성
                         .requestMatchers(HttpMethod.POST,"/presigned").permitAll()
                         .requestMatchers("/my").hasRole("USER")  // ✅ USER 권한 필요
                         .anyRequest().authenticated());  // ✅ 나머지는 인증 필요
 
 
-        // 세션 설정 : STATELESS
-        http
-                .sessionManagement((session) -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 
         return http.build();
