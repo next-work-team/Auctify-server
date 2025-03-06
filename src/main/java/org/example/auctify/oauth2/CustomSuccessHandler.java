@@ -53,6 +53,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         boolean isLocal = request.getRequestURL().toString().contains("localhost");
+        System.out.println(request.getRequestURL().toString());
+
+
         System.out.println(" secure isLocal  : " + isLocal);
 
 
@@ -82,7 +85,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // Secure=false → 쿠키가 HTTP와 HTTPS 둘 다 전송됨 클라가 Https일때는 true
         // HTTPS가 아닐 때도 테스트할 수 있도록 설정
 
-        cookie.setPath("/"); // 도메인의 모든 페이지 경로에 쿠키를 전송하도록 지정
+        cookie.setDomain(".auctify.shop"); // 서브도메인 간 공유
 
         cookie.setHttpOnly(true);
 
