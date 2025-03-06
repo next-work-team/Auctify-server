@@ -52,7 +52,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        boolean isLocal = request.getServerName().contains("localhost");
+        boolean isLocal = request.getRequestURL().toString().contains("localhost");
         System.out.println(" secure isLocal  : " + isLocal);
 
 
