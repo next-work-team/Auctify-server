@@ -62,6 +62,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         response.sendRedirect(targetUrl);
 
+
         // ✅ 리디렉션 대신 JSON 응답 반환
 //        response.setContentType("application/json");
 //        response.setCharacterEncoding("UTF-8");
