@@ -56,7 +56,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         System.out.println(" secure isLocal  : " + isLocal);
 
 
-        String targetUrl = isLocal ? "https://localhost:3000": "https://wwww.auctify.shop";
+        String targetUrl = isLocal ? "https://localhost:3000": "https://www.auctify.shop";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
 
