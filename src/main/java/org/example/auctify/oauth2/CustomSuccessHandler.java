@@ -65,7 +65,10 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setHeader("Access-Control-Expose-Headers", "Set-Coookie");
 
 
-        response.sendRedirect(targetUrl);
+        //response.sendRedirect(targetUrl);
+
+        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+
 
 
         // ✅ 리디렉션 대신 JSON 응답 반환
