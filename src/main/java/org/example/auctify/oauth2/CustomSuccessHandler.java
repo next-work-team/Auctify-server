@@ -62,6 +62,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String targetUrl = isLocal ? "https://localhost:3000": "https://www.auctify.shop";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
+        response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+
 
         response.sendRedirect(targetUrl);
 
