@@ -53,15 +53,13 @@ public class SecurityConfig {
 
                         configuration.setAllowedOrigins(Arrays.asList(
                                 "https://localhost:3000",
-                                "https://auctify-client.vercel.app",
-                                "https://auctify-client-beryl.vercel.app"
+                                "https://www.auctify.shop"
                         ));
                         configuration.setAllowedMethods(Collections.singletonList("*"));
-                        configuration.setAllowCredentials(true);
+                        configuration.setAllowCredentials(true); // ✅ 쿠키 전송 허용
                         configuration.setAllowedHeaders(Collections.singletonList("*"));
-                        configuration.setMaxAge(3600L);
-
                         configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
+                        configuration.setMaxAge(3600L); // 1시간 캐시
 
 
                         return configuration;

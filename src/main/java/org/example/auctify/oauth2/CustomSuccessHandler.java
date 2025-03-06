@@ -48,10 +48,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         String token = jwtUtil.createJwt(oauthId, role, 60 * 60 * 60 * 60L);
 
-        response.addCookie(createCookie("Authorization", token, request));
+        response.addCookie(createCookie("Authorization", token));
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
-        String targetUrl = (savedRequest != null) ? savedRequest.getRedirectUrl() : "https://auctify-client-beryl.vercel.app";
+
+        boolean isLocal = request.getServerName().contains("localhost");
+        System.out.println(" secure isLocal  : " + isLocal);
+
+
+        String targetUrl = isLocal ? "https://localhost:3000": "https://wwww.auctify.shop";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
 
@@ -64,7 +69,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     }
 
-    private Cookie createCookie(String key, String value, HttpServletRequest request) {
+    private Cookie createCookie(String key, String value) {
 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(60 * 60 * 60 * 60);
@@ -77,6 +82,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // HTTPS가 아닐 때도 테스트할 수 있도록 설정
 
         cookie.setPath("/"); // 도메인의 모든 페이지 경로에 쿠키를 전송하도록 지정
+
         cookie.setHttpOnly(true);
 
         // CORS 문제 해결 (리디렉션 후에도 쿠키 유지)
