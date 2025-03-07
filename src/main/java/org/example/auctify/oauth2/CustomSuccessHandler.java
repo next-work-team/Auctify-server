@@ -65,8 +65,6 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setHeader("Access-Control-Expose-Headers", "Set-Coookie");
 
 
-        //response.sendRedirect(targetUrl);
-
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
 
@@ -90,7 +88,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // Secure=false → 쿠키가 HTTP와 HTTPS 둘 다 전송됨 클라가 Https일때는 true
         // HTTPS가 아닐 때도 테스트할 수 있도록 설정
 
-        //cookie.setDomain("auctify.shop"); // 서브도메인 간 공유
+        cookie.setDomain("auctify.shop/"); // 서브도메인 간 공유
 
         cookie.setHttpOnly(true);
 
