@@ -94,6 +94,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // CORS 문제 해결 (리디렉션 후에도 쿠키 유지)
         cookie.setAttribute("SameSite", "None");
+        cookie.setPath("/");
+
 
         return cookie;
     }
