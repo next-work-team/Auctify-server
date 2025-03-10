@@ -10,6 +10,15 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.util.Objects;
+
+
+/*
+ *   worker : 조영흔
+ *   work : CustomOAuth2UserService에 주요 코드에 주석을 추가함
+ *
+ *   date : 2025/03/10
+ * */
 @Service
 public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
@@ -44,6 +53,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return null;
         }
 
+        // OAuthId가 해당 소셜 로그인 유저의 고유 식별자이다.
         String oauthId = oAuth2Response.getProvider() + " " + oAuth2Response.getProviderId();
 
         UserEntity existData = userRepository.findByOauthId(oauthId);
@@ -51,7 +61,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (existData == null) {
 
             UserEntity userEntity = UserEntity.builder()
-                    .oauthId(oauthId)
+                    .oauthId(oauthId) // 식별하는 값
                     .email(oAuth2Response.getEmail())
                     .nickName(oAuth2Response.getName())
                     .role(Role.ROLE_USER)
@@ -64,6 +74,11 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             return new CustomOauth2User(userDTO);
 
         } else {
+
+            if (Objects.equals(existData.getEmail(), "") || existData.getEmail() == null) {
+                String oAuth2Email = oAuth2Response.getName();
+                existData.onChangeEmail(oAuth2Email);
+            }
             UserDTO userDTO = new UserDTO();
             userDTO.setOauthId(existData.getOauthId());
             userDTO.setName(existData.getNickName());
