@@ -1,4 +1,4 @@
-package org.example.auctify.config;
+package org.example.auctify.config.security.s3;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;

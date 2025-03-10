@@ -54,4 +54,9 @@ public class UserEntity {
     private String introduction;
 
 
+    public void onChangeEmail(String email) {
+        this.email = email;
+    }
+
+
 }
