@@ -4,12 +4,14 @@ import org.example.auctify.dto.social.*;
 import org.example.auctify.dto.user.Role;
 import org.example.auctify.entity.user.UserEntity;
 import org.example.auctify.repository.user.UserRepository;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -59,6 +61,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
 
         UserEntity existData = userRepository.findByOauthId(oauthId);
 
+        UserDTO userDTO;
+
         if (existData == null) {
 
             UserEntity userEntity = UserEntity.builder()
@@ -68,11 +72,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .role(Role.ROLE_USER)
                     .build();
             userRepository.save(userEntity);
-            UserDTO userDTO = new UserDTO();
+            userDTO = new UserDTO();
             userDTO.setOauthId(oauthId);
             userDTO.setName(oAuth2Response.getName());
             userDTO.setRole(Role.ROLE_USER);
-            return new CustomOauth2User(userDTO);
 
         } else {
 
@@ -81,12 +84,22 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                 existData.onChangeEmail(oAuth2Email);
                 userRepository.save(existData); // 변경 사항을 DB에 저장
             }
-            UserDTO userDTO = new UserDTO();
+
+            userDTO = new UserDTO();
             userDTO.setOauthId(existData.getOauthId());
             userDTO.setName(existData.getNickName());
             userDTO.setRole(Role.ROLE_USER);
-            return new CustomOauth2User(userDTO);
         }
+
+
+        CustomOauth2User customUser = new CustomOauth2User(userDTO);
+
+        // 🔥 소셜로그인 성공후 SecurityContext에 저장
+        Authentication authentication = new UsernamePasswordAuthenticationToken(customUser, null, customUser.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        return new CustomOauth2User(userDTO);
+
 
     }
 }

@@ -11,6 +11,7 @@ import org.example.auctify.jwt.JWTUtil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.CookieRequestCache;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
@@ -38,13 +39,15 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         System.out.println("인증에 성공했습니다 인증인증");
         //OAuth2User
         CustomOauth2User customUserDetails = (CustomOauth2User) authentication.getPrincipal();
-
         String oauthId = customUserDetails.getOauthId();
+
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
         Iterator<? extends GrantedAuthority> interator = authorities.iterator();
         GrantedAuthority auth = interator.next();
         String role = auth.getAuthority();
+
+
 
         String token = jwtUtil.createJwt(oauthId, role, 60 * 60 * 60 * 60L);
 
@@ -52,14 +55,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
-        boolean isLocal = request.getRequestURL().toString().contains("localhost");
-        System.out.println(request.getRequestURL().toString());
 
 
-        System.out.println(" secure isLocal  : " + isLocal);
-
-
-        String targetUrl = isLocal ? "https://localhost:3000": "https://www.auctify.shop";
+        String targetUrl = "https://www.auctify.shop";
+//        boolean isLocal = request.getRequestURL().toString().contains("localhost");
+//        System.out.println(request.getRequestURL().toString());
+//        System.out.println(" secure isLocal  : " + isLocal);
+//        targetUrl = isLocal ? "https://localhost:3000": "https://www.auctify.shop";
 
         System.out.println("리디렉션할 URL: " + targetUrl);
         response.setHeader("Access-Control-Expose-Headers", "Set-Coookie");
