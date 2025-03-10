@@ -10,6 +10,7 @@ import org.example.auctify.dto.social.UserDTO;
 import org.example.auctify.dto.user.Role;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -52,15 +53,12 @@ public class JWTFilter extends OncePerRequestFilter {
         String token = authorization;
 
         if (jwtUtil.isExpired(token)) {
-
             System.out.println("token expired");
             filterChain.doFilter(request, response);
-
             // 조건이 해당되면 메소드 종료(필수)
             return;
         }else{
             System.out.println("token이 유효합니다");
-
         }
 
         //토근에서 oauthId, nickname, role 획득
@@ -80,8 +78,13 @@ public class JWTFilter extends OncePerRequestFilter {
         //스프링 시큐리티 인증 토큰 생성
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
 
-        //세션에 사용자 등록
-        SecurityContextHolder.getContext().setAuthentication(authToken);
+        // SecurityContext 설정
+        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+        securityContext.setAuthentication(authToken);
+        SecurityContextHolder.setContext(securityContext);
+
+        logger.info("SecurityContext에 인증 정보 설정 완료: " + SecurityContextHolder.getContext().getAuthentication());
 
         filterChain.doFilter(request, response);
     }

@@ -25,12 +25,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserEntity findUser = userRepository.findByOauthId(username);
+    public UserDetails loadUserByUsername(String oauthId) throws UsernameNotFoundException {
+        UserEntity findUser = userRepository.findByOauthId(oauthId);
         log.info("user : " + findUser);
 
         // 여기서 DB에서 사용자 정보를 가져와야 함
         if (findUser == null) {
+            log.error("[LOG] 해당 : oauthId에 유저가 없습니다.");
             throw new UsernameNotFoundException("User not found");
         }
 

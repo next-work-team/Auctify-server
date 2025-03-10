@@ -85,7 +85,7 @@ public class SecurityConfig {
 
         //JWTFilter 추가
         http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2AuthorizationCodeGrantFilter.class);
+                .addFilterBefore(new JWTFilter(jwtUtil), OAuth2AuthorizationCodeGrantFilter.class);
 
         // oauth2
         http
