@@ -9,6 +9,7 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -76,8 +77,9 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
 
             if (Objects.equals(existData.getEmail(), "") || existData.getEmail() == null) {
-                String oAuth2Email = oAuth2Response.getName();
+                String oAuth2Email = oAuth2Response.getEmail(); // 이메일을 올바르게 가져옴
                 existData.onChangeEmail(oAuth2Email);
+                userRepository.save(existData); // 변경 사항을 DB에 저장
             }
             UserDTO userDTO = new UserDTO();
             userDTO.setOauthId(existData.getOauthId());
