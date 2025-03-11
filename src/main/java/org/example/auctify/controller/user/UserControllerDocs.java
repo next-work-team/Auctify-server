@@ -3,8 +3,11 @@ package org.example.auctify.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.example.auctify.dto.user.ProfileDTO;
-import org.springframework.http.MediaType;
+import org.example.auctify.dto.Goods.FeedbackDTO;
+import org.example.auctify.dto.Goods.GoodsResponseDTO;
+import org.example.auctify.dto.user.MannerTemperatureDTO;
+import org.example.auctify.dto.user.UserInfoDTO;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,38 +20,44 @@ public interface UserControllerDocs {
 
 
     @Operation(summary = "마이페이지 개인 정보", description = "프로필 정보를 전달")
-    ResponseEntity<?> getMyInfo(@AuthenticationPrincipal UserDetails userDetails);
+    ResponseEntity<UserInfoDTO> getMyInfo(@AuthenticationPrincipal UserDetails userDetails);
 
     @Operation(summary = "프로필 변경", description = "프로필 사진과 닉네임을 변경하는 API")
-    ResponseEntity<?> changeProfile(@Validated ProfileDTO profile, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails);
+    ResponseEntity<UserInfoDTO> changeProfile(@Validated UserInfoDTO profile, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails);
 
 
     @Operation(summary = "토탈 거래 후기 확인", description = "받은 거래 후기와 작성한 거래후기들을 확인 할 수 있는 API")
-    ResponseEntity<?> getListTotalFeedback(@AuthenticationPrincipal UserDetails userDetails);
+    ResponseEntity<Page<FeedbackDTO>> getListTotalFeedback(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal UserDetails userDetails);
 
 
-    @Operation(summary = "매너 리스트 및 평균 매너", description = "받은 매너 온도를 확인할 수 있는 시스템")
-    ResponseEntity<?> getMannerTemperature(@AuthenticationPrincipal UserDetails userDetails);
+    @Operation(summary = "받은 매너 리스트 및 평균 매너", description = "받은 매너 온도를 확인할 수 있는 시스템")
+    ResponseEntity<Page<MannerTemperatureDTO>> getMannerTemperature(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal UserDetails userDetails);
 
 
     @Operation(summary = "내가 등록한 경매", description = "내가 등록한 경매 정보를 반환하는 API")
-    ResponseEntity<?> getMyBid(
-            @RequestParam(required = false) Long myBidId,
+    ResponseEntity<Page<GoodsResponseDTO>> getMyBid(
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails
     );
 
     @Operation(summary = "내가 입찰한 경매, 낙찰 경매품", description = "내가 입찰하거나 낙찰 받은 경매품리스트 API")
     ResponseEntity<?> getAuctifyInfo(
-            @RequestParam(required = false) Long auctifyId,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails
     );
 
 
     @Operation(summary = "좋아요 누른 경매품", description = "좋아요 누른 경매리스트를 가져오는 API")
-    ResponseEntity<?> getInfiniteScrollPosts(
-            @RequestParam(required = false) Long likedAuctifyId,
+    ResponseEntity<Page<GoodsResponseDTO>> getInfiniteScrollPosts(
+            @RequestParam(required = false) int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails
     );

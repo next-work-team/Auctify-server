@@ -6,8 +6,8 @@ import lombok.*;
 import org.example.auctify.entity.user.AddressEntity;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Builder
 public class AddressDTO {
