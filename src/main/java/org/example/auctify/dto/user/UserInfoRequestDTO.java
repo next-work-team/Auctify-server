@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserInfoDTO {
+public class UserInfoRequestDTO {
 
     @Schema(description = "회원 닉네임")
     private String nickName;

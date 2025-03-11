@@ -16,7 +16,13 @@ public class FeedbackDTO {
     private String registerNickname;
 
     @Schema(description = "낙찰자")
-    private String bidderNickName;
+    private String auctionNickName;
+
+    @Schema(description = "경매 등록자 Id")
+    private Long registerId;
+
+    @Schema(description = "낙찰자 Id")
+    private Long bidderId;
 
     @Schema(description = "후기내용")
     private String content;

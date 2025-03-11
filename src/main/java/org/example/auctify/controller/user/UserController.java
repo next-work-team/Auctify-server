@@ -4,29 +4,37 @@ import org.example.auctify.dto.Goods.AuctionGoodsDTO;
 import org.example.auctify.dto.Goods.FeedbackDTO;
 import org.example.auctify.dto.Goods.GoodsResponseDTO;
 import org.example.auctify.dto.user.MannerTemperatureDTO;
-import org.example.auctify.dto.user.ProfileDTO;
-import org.example.auctify.dto.user.UserInfoDTO;
+import org.example.auctify.dto.user.UserInfoRequestDTO;
+import org.example.auctify.dto.user.UserInfoResponseDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+@RestController
+@RequestMapping("/api/user") //유저 컨트럴러
 public class UserController implements UserControllerDocs{
     @Override
-    @GetMapping("/user")
-    public ResponseEntity<UserInfoDTO> getMyInfo(UserDetails userDetails) {
+    @GetMapping("/")
+    public ResponseEntity<UserInfoResponseDTO> getMyProfile(UserDetails userDetails) {
         return null;
     }
 
     @Override
-    @PutMapping("/user")
-    public ResponseEntity<UserInfoDTO> changeProfile(
-            UserInfoDTO userInfoDTO,
+    @GetMapping("/{userId}")
+    public ResponseEntity<UserInfoResponseDTO> getProfile(
+            @PathVariable long userId) {
+        return null;
+    }
+
+
+
+    @Override
+    @PutMapping("/")
+    public ResponseEntity<UserInfoResponseDTO> changeProfile(
+            UserInfoRequestDTO userInfoDTO,
             BindingResult bindingResult,
             UserDetails userDetails) {
         return null;
