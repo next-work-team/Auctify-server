@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.apache.catalina.User;
+import org.example.auctify.dto.Goods.GoodsStatus;
+import org.example.auctify.dto.user.Role;
 import org.example.auctify.entity.BaseTimeEntity;
 import org.example.auctify.entity.user.UserEntity;
 
@@ -46,8 +48,11 @@ public class GoodsEntity extends BaseTimeEntity {
     @Column(name="goods_process_status")
     private String goodsProcessStatus;
 
+
+    @Enumerated(EnumType.STRING)
     @Column(name="goods_status", nullable = false)
-    private String goodsStatus;
+    private GoodsStatus goodsStatus;
+
 
     @Column(name="minimum_bid_amount", nullable = false)
     private Long minimumBidAmount;

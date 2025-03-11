@@ -49,7 +49,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
 
-        String token = jwtUtil.createJwt(oauthId, role, 60 * 60 * 60 * 60L);
+        // 개발시 9시간 60 * 60 * 1000L = 1시간
+        String token = jwtUtil.createJwt(oauthId, role, 60 * 60 * 1000L * 9);
 
         response.addCookie(createCookie("Authorization", token));
         // 사용자가 원래 요청했던 URL 가져오기

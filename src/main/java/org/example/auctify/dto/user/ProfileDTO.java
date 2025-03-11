@@ -11,8 +11,8 @@ import java.time.LocalDate;
 
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 public class ProfileDTO {
 
