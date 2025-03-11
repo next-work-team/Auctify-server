@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.auctify.dto.Goods.FeedbackDTO;
 import org.example.auctify.dto.Goods.GoodsResponseDTO;
 import org.example.auctify.dto.user.MannerTemperatureDTO;
-import org.example.auctify.dto.user.UserInfoDTO;
+import org.example.auctify.dto.user.UserInfoResponseDTO;
+import org.example.auctify.dto.user.UserInfoRequestDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,11 +20,14 @@ import org.springframework.web.bind.annotation.*;
 public interface UserControllerDocs {
 
 
-    @Operation(summary = "마이페이지 개인 정보", description = "프로필 정보를 전달")
-    ResponseEntity<UserInfoDTO> getMyInfo(@AuthenticationPrincipal UserDetails userDetails);
+    @Operation(summary = "마이페이지 개인 정보", description = "자신의 프로필 정보를 전달")
+    ResponseEntity<UserInfoResponseDTO> getMyProfile(@AuthenticationPrincipal UserDetails userDetails);
+
+    @Operation(summary = "마이페이지 개인 정보", description = "검색 유저의 프로필 정보를 전달")
+    ResponseEntity<UserInfoResponseDTO> getProfile(long userId);
 
     @Operation(summary = "프로필 변경", description = "프로필 사진과 닉네임을 변경하는 API")
-    ResponseEntity<UserInfoDTO> changeProfile(@Validated UserInfoDTO profile, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails);
+    ResponseEntity<UserInfoResponseDTO> changeProfile(@Validated UserInfoRequestDTO profile, BindingResult bindingResult, @AuthenticationPrincipal UserDetails userDetails);
 
 
     @Operation(summary = "토탈 거래 후기 확인", description = "받은 거래 후기와 작성한 거래후기들을 확인 할 수 있는 API")
@@ -57,7 +61,7 @@ public interface UserControllerDocs {
 
     @Operation(summary = "좋아요 누른 경매품", description = "좋아요 누른 경매리스트를 가져오는 API")
     ResponseEntity<Page<GoodsResponseDTO>> getInfiniteScrollPosts(
-            @RequestParam(required = false) int page,
+            @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @AuthenticationPrincipal UserDetails userDetails
     );

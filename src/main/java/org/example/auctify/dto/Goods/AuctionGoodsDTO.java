@@ -20,11 +20,17 @@ public class AuctionGoodsDTO {
     @Schema(description = "경매 등록자")
     private String registerNickname;
 
+    @Schema(description = "경매 등록자 아이디")
+    private Long registerId;
+
     @Schema(description = "경매 입찰자 본인")
     private String biderNickname;
 
+    @Schema(description = "경매 입찰자 본인 Id")
+    private Long biderId;
+
     @Schema(description = "경매 id")
-    private String goodsId;
+    private Long goodsId;
 
     @Schema(description = "경매품 이미지")
     private List<String> auctionImage;
@@ -40,5 +46,8 @@ public class AuctionGoodsDTO {
 
     @Schema(description = "경매 낙찰 여부")
     private GoodsStatus goodsStatus;
+
+    @Schema(description = "경매 낙찰자 ID 없거나 진행중이면 빈 문자열")
+    private String auctionId;
 
 }
