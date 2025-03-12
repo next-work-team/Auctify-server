@@ -1,5 +1,6 @@
 package org.example.auctify.dto.Goods;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,8 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@JsonFormat(shape = JsonFormat.Shape.STRING)
+
 public class GoodsRequestDTO {
 
     @NotBlank(message = "등록하는 유저id 는 필수입니다.")

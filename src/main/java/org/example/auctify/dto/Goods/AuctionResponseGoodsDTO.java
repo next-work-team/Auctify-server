@@ -7,15 +7,18 @@ import lombok.*;
 
 import java.util.List;
 
-
-// 내가 입찰 낙찰 한 정보를 저장하는 DTO
+/**
+ * worker : 조영흔
+ * work : 내가 입찰한 정보를 반환하는 DTO
+ * date    : 2025/03/12
+ */
 @Getter
 @ToString
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
+@AllArgsConstructor
 @Builder
 @JsonFormat(shape = JsonFormat.Shape.STRING)
-public class AuctionGoodsDTO {
+public class AuctionResponseGoodsDTO {
 
     @Schema(description = "경매 등록자")
     private String registerNickname;
@@ -33,16 +36,16 @@ public class AuctionGoodsDTO {
     private Long goodsId;
 
     @Schema(description = "경매품 이미지")
-    private List<String> auctionImage;
+    private List<String> goodsImage;
 
     @Schema(description = "경매품 이름")
     private String goodsName;
 
     @Schema(description = "나의 입찰가")
-    private double myBidAmount;
+    private double BidPrice;
 
     @Schema(description = "현재 최고 입찰가")
-    private double MaxBidAmount;
+    private double MaxBidPrice;
 
     @Schema(description = "경매 낙찰 여부")
     private GoodsStatus goodsStatus;

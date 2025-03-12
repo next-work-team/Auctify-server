@@ -66,7 +66,14 @@ public interface UserControllerDocs {
             @AuthenticationPrincipal UserDetails userDetails
     );
 
-    //Last-Event-ID는 SSE 연결이 끊어질 경우, 클라이언트가 수신한 마지막 데이터의 id값을 의미합니다. 항상 존재하는 것이 아니기 때문에 false
-    @Operation(summary = "알람을 구독함", description = "알람을 구독하는 API")
+    @Operation(summary = "주소 리스트를 반환", description = "주소 리스트를 전달하는 API " +
+            "(대표 주소는 반드시 선택되게 만듦)")
+    ResponseEntity<Page<FeedbackDTO>> getListAddress(
+            @AuthenticationPrincipal UserDetails userDetails);
+
+    //Last-Event-ID는 SSE 연결이 끊어질 경우,
+    // 클라이언트가 수신한 마지막 데이터의 id값을 의미합니다. 항상 존재하는 것이 아니기 때문에 false
+    @Operation(summary = "알람을 구독함 ", description = "알람을 구독하는 API" +
+            "(SSE연결을 위한 API이다 !!" )
     ResponseEntity<?> subscribe(@AuthenticationPrincipal UserDetails userDetails, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "")String lastEventId);
 }

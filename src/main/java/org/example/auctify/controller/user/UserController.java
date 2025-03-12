@@ -1,6 +1,6 @@
 package org.example.auctify.controller.user;
 
-import org.example.auctify.dto.Goods.AuctionGoodsDTO;
+import org.example.auctify.dto.Goods.AuctionResponseGoodsDTO;
 import org.example.auctify.dto.Goods.FeedbackDTO;
 import org.example.auctify.dto.Goods.GoodsResponseDTO;
 import org.example.auctify.dto.user.MannerTemperatureDTO;
@@ -70,7 +70,7 @@ public class UserController implements UserControllerDocs{
 
     @Override
     @GetMapping("/myAuctify")
-    public ResponseEntity<Page<AuctionGoodsDTO>> getAuctifyInfo(
+    public ResponseEntity<Page<AuctionResponseGoodsDTO>> getAuctifyInfo(
             int page,
             int size,
             UserDetails userDetails) {
@@ -83,6 +83,12 @@ public class UserController implements UserControllerDocs{
             int page,
             int size,
             UserDetails userDetails) {
+        return null;
+    }
+
+    @Override
+    @GetMapping("/address")
+    public ResponseEntity<Page<FeedbackDTO>> getListAddress(UserDetails userDetails) {
         return null;
     }
 
