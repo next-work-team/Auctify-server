@@ -72,11 +72,17 @@ public class Goodscontroller implements GoodsControllerDocs{
     //사용자는 경매 리스트 조회 가능
     //Pageable 로 반환, 페이지 사이즈는 요청에 따라 변경 가능
     @Operation(summary = "물품 검색 결과창", description = "사용자가 물품을 검색하고, 페이지네이션으로 반환합니다.")
-    @PostMapping("/search")
+    @GetMapping("/search")
     public ResponseEntity<GoodsResponseDTO> searchGoods(
-            SearchDTO searchDTO, //단어 필수 입력
-            int page,
-            int size
+            String category, // 카테고리
+            double priceRangeLow, // 현재 입찰가 범위 low
+            double priceRangeHigh, // 현재 입찰가 high
+            boolean isNew, // 새상품 | 중고 여부
+            String auctionStatus, // 경매 상태
+            String auctionTitle,  // 경매 제목
+            String sort,  // 경매 제목
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
         //TODO
         return ResponseEntity.ok(null);
