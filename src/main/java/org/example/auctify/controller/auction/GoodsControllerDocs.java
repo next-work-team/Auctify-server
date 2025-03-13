@@ -41,7 +41,13 @@ public interface GoodsControllerDocs {
     // 사용자는 경매 리스트 조회 가능
     @Operation(summary = "물품 검색 결과창", description = "사용자가 물품을 검색하고, 페이지네이션으로 반환합니다.")
     ResponseEntity<GoodsResponseDTO> searchGoods(
-            SearchDTO keyword,
+            @RequestParam(required = false) String category, // 카테고리
+            @RequestParam(required = false) double priceRangeLow, // 현재 입찰가 범위 low
+            @RequestParam(required = false) double priceRangeHigh, // 현재 입찰가 high
+            @RequestParam(required = false) boolean isNew, // 새상품 | 중고 여부
+            @RequestParam(required = false) String auctionStatus, // 경매 상태
+            @RequestParam(required = false) String auctionTitle,  // 경매 제목
+            @RequestParam(required = false) String sort,  // 경매 제목
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     );
