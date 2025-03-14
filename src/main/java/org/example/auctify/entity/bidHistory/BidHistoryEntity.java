@@ -2,7 +2,9 @@ package org.example.auctify.entity.bidHistory;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.auctify.entity.BaseTimeEntity;
 import org.example.auctify.entity.Goods.GoodsEntity;
+import org.example.auctify.entity.payment.PaymentEntity;
 import org.example.auctify.entity.user.UserEntity;
 
 
@@ -11,7 +13,7 @@ import org.example.auctify.entity.user.UserEntity;
 @AllArgsConstructor
 @Builder
 @Entity(name = "bid_history")
-public class BidHistoryEntity {
+public class BidHistoryEntity extends BaseTimeEntity {
 
 
     // 경매 참여 내역 ID
@@ -44,5 +46,9 @@ public class BidHistoryEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "goods_id")             // GoodsEntity goods_id로  연결
     private GoodsEntity goods;
+
+    // 추가된 부분 (양방향 매핑)
+    @OneToOne(mappedBy = "bidHistory", fetch = FetchType.LAZY)
+    private PaymentEntity payment;
 
 }

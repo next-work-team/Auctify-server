@@ -1,9 +1,10 @@
 package org.example.auctify.entity.user;
 
 
-import jakarta.persistence.Embeddable;
+import jakarta.persistence.*;
 import lombok.*;
 import org.example.auctify.dto.user.AddressDTO;
+import org.example.auctify.entity.BaseTimeEntity;
 
 
 /**
@@ -15,20 +16,40 @@ import org.example.auctify.dto.user.AddressDTO;
 @ToString
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Builder
-@Embeddable
-public class AddressEntity {
-    private String userAddr;
-    private String userAddrDetail;
-    private String userZipCode;
+@Entity(name= "address")
+public class AddressEntity   extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "address_id")
+    private Long addressId;
+
+    @Column(name="addr", nullable = false)
+    private String addr;
+
+    @Column(name="addrDetail", nullable = false)
+    private String addrDetail;
+
+    @Column(name="zipCode", nullable = false)
+    private String zipCode;
+
+    @Column(name="defaultAddress", nullable = true)
+    private String defaultAddress;
+
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private UserEntity user;
 
 
     public static AddressEntity changeEntity(AddressDTO addressDTO) {
         return AddressEntity.builder()
-                .userAddr(addressDTO.getUserAddress())
-                .userAddrDetail(addressDTO.getUserAddressDetail())
-                .userZipCode(addressDTO.getUserZipCode())
+                .addr(addressDTO.getAddr())
+                .defaultAddress(addressDTO.getDefaultAddress())
+                .addrDetail(addressDTO.getAddrDetail())
+                .zipCode(addressDTO.getZipCode())
                 .build();
     }
 

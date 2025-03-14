@@ -2,13 +2,14 @@ package org.example.auctify.entity.Goods;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.example.auctify.entity.BaseTimeEntity;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity
-public class GoodsImageEntity {
+@Entity(name = "goods_image")
+public class GoodsImageEntity extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
