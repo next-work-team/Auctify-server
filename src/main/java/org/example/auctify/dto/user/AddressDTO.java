@@ -12,25 +12,29 @@ import org.example.auctify.entity.user.AddressEntity;
 @Builder
 public class AddressDTO {
     @Schema(description = "주소")
-    private String userAddress;
+    private String addr;
     @Schema(description = "상세 주소")
-    private String userAddressDetail;
+    private String addrDetail;
     @Schema(description = "우편 번호")
-    private String userZipCode;
+    private String zipCode;
+    @Schema(description = "기본주소여부 ")
+    private String defaultAddress;
 
     public static AddressDTO changeDTO(AddressEntity address) {
         return AddressDTO.builder()
-                .userAddress(address.getUserAddr())
-                .userAddressDetail(address.getUserAddrDetail())
-                .userZipCode(address.getUserZipCode())
+                .addr(address.getAddr())
+                .addrDetail(address.getAddrDetail())
+                .zipCode(address.getZipCode())
+                .defaultAddress(address.getDefaultAddress())
                 .build();
     }
 
-    public static AddressDTO addAddress(String userAddr, String userAddressDetail, String userZipCode) {
+    public static AddressDTO addAddress(String userAddr, String userAddressDetail, String userZipCode,String defaultAddress) {
         return AddressDTO.builder()
-                .userAddress(userAddr)
-                .userAddressDetail(userAddressDetail)
-                .userZipCode(userZipCode)
+                .addr(userAddr)
+                .addrDetail(userAddressDetail)
+                .zipCode(userZipCode)
+                .defaultAddress(defaultAddress)
                 .build();
     }
 

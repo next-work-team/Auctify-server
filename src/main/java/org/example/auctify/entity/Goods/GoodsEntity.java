@@ -4,13 +4,18 @@ package org.example.auctify.entity.Goods;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import net.minidev.json.annotate.JsonIgnore;
 import org.apache.catalina.User;
 import org.example.auctify.dto.Goods.GoodsStatus;
 import org.example.auctify.dto.user.Role;
 import org.example.auctify.entity.BaseTimeEntity;
+import org.example.auctify.entity.bidHistory.BidHistoryEntity;
+import org.example.auctify.entity.like.LikeEntity;
 import org.example.auctify.entity.user.UserEntity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * worker : 박예빈
@@ -20,7 +25,7 @@ import java.time.LocalDateTime;
 
 
 @Getter
-@Entity
+@Entity(name = "goods")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -69,5 +74,15 @@ public class GoodsEntity extends BaseTimeEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name="category_id")
     private GoodsCategoryEntity categoryId;
+
+    @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    private List<BidHistoryEntity> bidHistories =new ArrayList<BidHistoryEntity>();
+
+    @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    private List<LikeEntity> like =new ArrayList<LikeEntity>();
 
 }
