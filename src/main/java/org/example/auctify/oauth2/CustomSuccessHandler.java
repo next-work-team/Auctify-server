@@ -40,6 +40,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         //OAuth2User
         CustomOauth2User customUserDetails = (CustomOauth2User) authentication.getPrincipal();
         String oauthId = customUserDetails.getOauthId();
+        Long userId = customUserDetails.getUserId();
+        String name = customUserDetails.getName();
+
 
 
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
@@ -50,19 +53,23 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
         // 개발시 9시간 60 * 60 * 1000L = 1시간
-        String token = jwtUtil.createJwt(oauthId, role, 60 * 60 * 1000L * 9);
+        String token = jwtUtil.createJwt(userId,name,oauthId,role, 60 * 60 * 9L);
 
-        response.addCookie(createCookie("Authorization", token));
+        response.addCookie(createCookie("Authorization", token,request));
         // 사용자가 원래 요청했던 URL 가져오기
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
 
 
-        String targetUrl = "https://www.auctify.shop";
-//        boolean isLocal = request.getRequestURL().toString().contains("localhost");
-//        System.out.println(request.getRequestURL().toString());
-//        System.out.println(" secure isLocal  : " + isLocal);
-//        targetUrl = isLocal ? "https://localhost:3000": "https://www.auctify.shop";
+        String serverName = request.getServerName();
+        String targetUrl;
+
+        if (serverName.contains("localhost")) {
+            // React가 없으면 일단 임시로 백엔드 API 경로 또는 성공페이지
+            targetUrl = "http://localhost:8080/my";
+        } else {
+            targetUrl = "https://www.auctify.shop";
+        }
 
         System.out.println("리디렉션할 URL: " + targetUrl);
         response.setHeader("Access-Control-Expose-Headers", "Set-Coookie");
@@ -79,24 +86,23 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     }
 
-    private Cookie createCookie(String key, String value) {
+    private Cookie createCookie(String key, String value, HttpServletRequest request) {
 
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 60 * 60 * 60);
+        cookie.setMaxAge(60 * 60 * 9);
 
-//        boolean isLocal = request.getServerName().contains("localhost");
-//        System.out.println(" secure options  : " + !isLocal);
-        cookie.setSecure(true); // 로컬 개발 환경에서는 Secure=false
+        boolean isLocal = request.getServerName().contains("localhost");
 
-        // Secure=false → 쿠키가 HTTP와 HTTPS 둘 다 전송됨 클라가 Https일때는 true
-        // HTTPS가 아닐 때도 테스트할 수 있도록 설정
-
-        cookie.setDomain("auctify.shop"); // 서브도메인 간 공유
-
+        cookie.setSecure(!isLocal);  // 로컬 환경에서는 Secure = false
         cookie.setHttpOnly(true);
 
-        // CORS 문제 해결 (리디렉션 후에도 쿠키 유지)
-        cookie.setAttribute("SameSite", "None");
+        if (!isLocal) {
+            cookie.setDomain("auctify.shop");  // 로컬이 아니면 설정
+            cookie.setAttribute("SameSite", "None");
+        } else {
+            cookie.setAttribute("SameSite", "Lax");  // 로컬에서는 Lax 또는 Strict로 설정
+        }
+
         cookie.setPath("/");
 
 

@@ -11,6 +11,9 @@ import lombok.*;
 @Builder
 public class UserInfoResponseDTO {
 
+    @Schema(description = "회원 번호")
+    private Long userId;
+
     @Schema(description = "회원 닉네임")
     private String nickName;
 
@@ -23,7 +26,8 @@ public class UserInfoResponseDTO {
     @Schema(description = "평균 온도 ")
     private double mannerTemperature;
 
-    @Schema
-    private AddressDTO addressDTO;
+//
+//    @Schema
+//    private AddressDTO addressDTO;
 
 }

@@ -7,6 +7,7 @@ import org.example.auctify.dto.user.Role;
 import org.example.auctify.entity.BaseTimeEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
 import org.example.auctify.entity.like.LikeEntity;
+import org.example.auctify.entity.review.ReviewEntity;
 
 import java.lang.annotation.ElementType;
 import java.time.LocalDate;
@@ -25,7 +26,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-public class UserEntity  extends BaseTimeEntity {
+public class UserEntity extends BaseTimeEntity {
 
 
     @Id
@@ -33,7 +34,7 @@ public class UserEntity  extends BaseTimeEntity {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "oauth_id", nullable = false )
+    @Column(name = "oauth_id", nullable = false)
     private String oauthId;
 
 
@@ -47,21 +48,20 @@ public class UserEntity  extends BaseTimeEntity {
     private LocalDate birthday;
 
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    private List<AddressEntity> address = new ArrayList<AddressEntity>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
-    private List<AddressEntity> address =new ArrayList<AddressEntity>();
+    private List<BidHistoryEntity> bidHistories = new ArrayList<BidHistoryEntity>();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
-    private List<BidHistoryEntity> bidHistories =new ArrayList<BidHistoryEntity>();
-
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @Builder.Default
-    @JsonIgnore
-    private List<LikeEntity> like =new ArrayList<LikeEntity>();
+    private List<LikeEntity> like = new ArrayList<LikeEntity>();
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
@@ -70,8 +70,16 @@ public class UserEntity  extends BaseTimeEntity {
     @Column(name = "image", nullable = true)
     private String image;
 
-    @Column( name = "introduction", nullable = true)
+    @Column(name = "introduction", nullable = true)
     private String introduction;
+
+    @OneToMany(mappedBy = "receiverUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ReviewEntity> receivedReviews = new ArrayList<ReviewEntity>();
+
+    @OneToMany(mappedBy = "writerUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<ReviewEntity> writtenReviews = new ArrayList<ReviewEntity>();
 
 
     public void onChangeEmail(String email) {
