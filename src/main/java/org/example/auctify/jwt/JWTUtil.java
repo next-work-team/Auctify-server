@@ -22,6 +22,9 @@ public class JWTUtil {
     }
 
 
+    public Long getUserId(String token) {
+        return  Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("userId", Long.class);
+    }
     public String getOauthId(String token) {
 
         return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("oauthId", String.class);
@@ -54,9 +57,11 @@ public class JWTUtil {
     }
 
 
-    public String createJwt(String oauthId, String role, Long expiredMs) {
+    public String createJwt(Long userId,String nickname, String oauthId, String role, Long expiredMs) {
 
         return Jwts.builder()
+                .claim("userId", userId)
+                .claim("nickname", nickname)
                 .claim("oauthId", oauthId)
                 .claim("role", role)
                 .issuedAt(new Date(System.currentTimeMillis()))

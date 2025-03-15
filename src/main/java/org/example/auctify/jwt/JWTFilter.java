@@ -64,12 +64,14 @@ public class JWTFilter extends OncePerRequestFilter {
         }
 
         //토근에서 oauthId, nickname, role 획득
+        Long userId = jwtUtil.getUserId(token);
         String oauthId = jwtUtil.getOauthId(token);
         String nickname = jwtUtil.getNickname(token);
         String role = jwtUtil.getRole(token);
 
         //userDTO를 생성하며 값 set
         UserDTO userDTO = new UserDTO();
+        userDTO.setUserId(userId);
         userDTO.setOauthId(oauthId);
         userDTO.setName(nickname);
         userDTO.setRole(Role.valueOf(role));
@@ -81,10 +83,13 @@ public class JWTFilter extends OncePerRequestFilter {
         Authentication authToken = new UsernamePasswordAuthenticationToken(customOAuth2User, null, customOAuth2User.getAuthorities());
 
         // SecurityContext 설정
-        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
-        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
-        securityContext.setAuthentication(authToken);
-        SecurityContextHolder.setContext(securityContext);
+//        SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+//        SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
+//        securityContext.setAuthentication(authToken);
+//        SecurityContextHolder.setContext(securityContext);
+
+        SecurityContextHolder.getContext().setAuthentication(authToken);
+
 
         logger.info("SecurityContext에 인증 정보 설정 완료: " + SecurityContextHolder.getContext().getAuthentication());
 

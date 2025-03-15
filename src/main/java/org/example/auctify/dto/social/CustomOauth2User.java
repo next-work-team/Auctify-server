@@ -12,6 +12,7 @@ public class CustomOauth2User implements OAuth2User {
     private final UserDTO userDTO;
 
     public CustomOauth2User(UserDTO userDTO) {
+        System.out.println( "userDTO 가져온거 "+userDTO.toString());
         this.userDTO = userDTO;
     }
 
@@ -50,6 +51,10 @@ public class CustomOauth2User implements OAuth2User {
     public String getRole() {
 
         return userDTO.getRole().toString();
+    }
+
+    public Long getUserId() {
+        return userDTO.getUserId();
     }
 
 

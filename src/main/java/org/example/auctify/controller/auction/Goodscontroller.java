@@ -2,13 +2,10 @@ package org.example.auctify.controller.auction;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.example.auctify.dto.Goods.*;
+import org.example.auctify.dto.social.CustomOauth2User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -51,7 +48,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @PostMapping("/bid")
     public ResponseEntity<GoodsRequestDTO> createBid(
             @RequestBody BidRequestDTO goodsRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     ){
         return ResponseEntity.ok(null);
         //TODO
@@ -62,7 +59,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @PutMapping("/bid")
     public ResponseEntity<GoodsRequestDTO> cancelBid(
             @RequestBody BidRequestDTO goodsRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     ){
         return ResponseEntity.ok(null);
         //TODO
@@ -94,7 +91,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @PostMapping("/review/{goodsId}")
     public ResponseEntity<List<ReviewResponseDTO>> createReview(
             ReviewRequestDTO reviewRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     ){
         return ResponseEntity.ok(null);
         //likeService.likeGoods(goodsId);
@@ -107,7 +104,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @PutMapping("/liked/{goodsId}")
     public ResponseEntity<LikeResponseDTO> changeLike(
             LikeRequestDTO likeRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     ){
         return null;
     }
@@ -117,7 +114,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @PostMapping("/{goodsId}/{bidId}")
     public ResponseEntity<BidPurchaseResponseDTO> create(
             BidPurchaseRequestDTO bidPurchaseRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     ){
         return ResponseEntity.ok(null);
         //likeService.likeGoods(goodsId);

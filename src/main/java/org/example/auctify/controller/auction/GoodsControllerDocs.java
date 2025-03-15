@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.auctify.dto.Goods.*;
+import org.example.auctify.dto.social.CustomOauth2User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,14 +31,14 @@ public interface GoodsControllerDocs {
     @Operation(summary = "실시간 입찰", description = "사용자가 경매 품목을 입찰합니다.")
     ResponseEntity<GoodsRequestDTO> createBid(
             @RequestBody BidRequestDTO goodsRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
     // 실시간 입찰 취소
     @Operation(summary = "실시간 입찰 취소", description = "사용자가 경매 품목을 입찰 취소합니다.")
     ResponseEntity<GoodsRequestDTO> cancelBid(
             @RequestBody BidRequestDTO goodsRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
     // 사용자는 경매 리스트 조회 가능
@@ -58,20 +59,20 @@ public interface GoodsControllerDocs {
     @Operation(summary = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있음.", description = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있습니다.")
     ResponseEntity<List<ReviewResponseDTO>> createReview(
             ReviewRequestDTO reviewRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
     // 좋아요(찜)을 하거나 취소 가능
     @Operation(summary = "모든 유저는 상품에 좋아요(찜)를 누를 수 있다.", description = "경매품에 좋아요(찜)를 누를 수 있고 해당 상품에 좋아요(찜)를 눌렀으면 취소도 가능한 API")
     ResponseEntity<LikeResponseDTO> changeLike(
             LikeRequestDTO likeRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
     // 낙찰자가 실제 결제 후 정보를 등록하는 API
     @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는 API")
     ResponseEntity<BidPurchaseResponseDTO> create(
             BidPurchaseRequestDTO bidPurchaseRequestDTO,
-            @AuthenticationPrincipal UserDetails userDetails
+            @AuthenticationPrincipal CustomOauth2User userDetails
     );
 }
