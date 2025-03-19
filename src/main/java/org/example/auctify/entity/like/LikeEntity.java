@@ -10,7 +10,8 @@ import org.example.auctify.entity.user.UserEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-@Entity(name = "likes")
+@Entity
+@Table(name = "liked")
 public class LikeEntity extends BaseTimeEntity {
 
     @Id

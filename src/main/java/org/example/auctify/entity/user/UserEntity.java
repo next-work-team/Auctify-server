@@ -21,6 +21,7 @@ import java.util.List;
  */
 
 @Entity
+@Table(name="user")
 @Getter
 @ToString()
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -84,6 +85,31 @@ public class UserEntity extends BaseTimeEntity {
 
     public void onChangeEmail(String email) {
         this.email = email;
+    }
+
+    public void onChangeNickname(String nickname){this.nickName = nickname;}
+
+    public void onChangeProfileImage(String image){this.image = image;}
+
+    public void onChangeBirthday(LocalDate birthday) {
+        this.birthday = birthday;
+    }
+
+    public void onChangeDefaultAddress(Long defaultAddressId) {
+        this.address.forEach(addr ->{
+            addr.onChangeDefaultAddress(defaultAddressId.equals(addr.getAddressId()));
+        });
+    }
+
+    public Double getAverageTemperature(){
+        Double averageTemperature = 0.0;
+        if(!receivedReviews.isEmpty()) {
+            averageTemperature = receivedReviews.stream()
+                    .mapToDouble(ReviewEntity::getTemperature)
+                    .average()
+                    .orElse(0.0);
+        }
+        return averageTemperature;
     }
 
 

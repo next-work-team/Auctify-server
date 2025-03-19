@@ -9,14 +9,17 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
-public class FeedbackDTO {
+public class ReviewDetailResponseDTO {
 
+    @Schema(description = "받은사람 Id")
+    private Long userId;
 
-    @Schema(description = "경매 등록자")
+    @Schema(description = "경매 등록자 닉네임")
     private String registerNickname;
 
-    @Schema(description = "낙찰자")
-    private String auctionNickName;
+    @Schema(description = "낙찰자 닉네임")
+    private String bidderNickName;
+
 
     @Schema(description = "경매 등록자 Id")
     private Long registerId;
@@ -31,9 +34,9 @@ public class FeedbackDTO {
     private long goodsId;
 
     @Schema(description = "경매품 이미지")
-    private String auctionImage;
+    private String goodsImage;
 
     @Schema(description = "경매 평점")
-    private double score;
+    private Double temperature;
 
 }

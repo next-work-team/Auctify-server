@@ -12,7 +12,8 @@ import org.example.auctify.entity.BaseTimeEntity;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Entity(name = "goods_category")
+@Entity
+@Table(name = "goods_category")
 public class GoodsCategoryEntity extends BaseTimeEntity {
 
     @Id

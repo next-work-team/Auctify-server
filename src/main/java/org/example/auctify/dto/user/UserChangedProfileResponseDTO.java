@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserInfoResponseDTO {
+public class UserChangedProfileResponseDTO {
 
     @Schema(description = "회원 번호")
     private Long userId;
@@ -23,8 +23,9 @@ public class UserInfoResponseDTO {
     @Schema(description = "회원 생년월일")
     private String birthdate;
 
-    @Schema(description = "평균 온도 ")
-    private double mannerTemperature;
-
-
+    @Schema(description = "바뀐 기본 주소")
+    private AddressDTO addressDTO;
 }
+
+
+

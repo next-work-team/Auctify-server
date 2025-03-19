@@ -7,7 +7,6 @@ import org.example.auctify.dto.Goods.*;
 import org.example.auctify.dto.social.CustomOauth2User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -57,7 +56,7 @@ public interface GoodsControllerDocs {
 
     // 매너 온도 평가 가능 + 후기
     @Operation(summary = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있음.", description = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있습니다.")
-    ResponseEntity<List<ReviewResponseDTO>> createReview(
+    ResponseEntity<List<ReviewDetailResponseDTO>> createReview(
             ReviewRequestDTO reviewRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     );

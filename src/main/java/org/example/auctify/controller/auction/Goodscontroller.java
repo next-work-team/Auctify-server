@@ -89,7 +89,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @Operation(summary = "경매 등록자 낙찰자가 매너온도및 후기 지정할 수 있음.", description = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 " +
             "수 있다. 모든 구매를 마치고 후기를 등록하는 API")
     @PostMapping("/review/{goodsId}")
-    public ResponseEntity<List<ReviewResponseDTO>> createReview(
+    public ResponseEntity<List<ReviewDetailResponseDTO>> createReview(
             ReviewRequestDTO reviewRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ){
