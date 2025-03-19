@@ -3,6 +3,7 @@ package org.example.auctify.controller.auction;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import org.example.auctify.dto.Goods.*;
+import org.example.auctify.dto.response.ApiResponseDTO;
 import org.example.auctify.dto.social.CustomOauth2User;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,7 +26,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     // 경매 물품 정보를 반환 (상세 조회)
     @Operation(summary = "물품 정보 반환", description = "경매 물품 정보 페이지 입니다.")
     @GetMapping("/{goodsId}")
-    public ResponseEntity<GoodsResponseDTO> getGoods(
+    public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> getGoods(
             @Parameter(description = "조회할 물품 ID", example = "1")
             @PathVariable("goodsId") Long goodsId){
         return ResponseEntity.ok(null);
@@ -36,7 +37,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     //경매품을 등록
     @Operation(summary = "물품 등록", description = "사용자가 경매 품목을 등록합니다.")
     @PostMapping
-    public ResponseEntity<GoodsRequestDTO> createGoods(
+    public ResponseEntity<ApiResponseDTO<GoodsRequestDTO>> createGoods(
             @RequestBody GoodsRequestDTO goodsRequestDTO
     ){
         return ResponseEntity.ok(null);
@@ -46,7 +47,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     // 실시간 입찰
     @Operation(summary = "실시간 입찰", description = "사용자가 경매 품목을 입찰합니다.")
     @PostMapping("/bid")
-    public ResponseEntity<GoodsRequestDTO> createBid(
+    public ResponseEntity<ApiResponseDTO<GoodsRequestDTO>> createBid(
             @RequestBody BidRequestDTO goodsRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ){
@@ -57,7 +58,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     // 실시간 입찰 취소
     @Operation(summary = "실시간 입찰 취소", description = "사용자가 경매 품목을 입찰 취소합니다.")
     @PutMapping("/bid")
-    public ResponseEntity<GoodsRequestDTO> cancelBid(
+    public ResponseEntity<ApiResponseDTO<GoodsRequestDTO>> cancelBid(
             @RequestBody BidRequestDTO goodsRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ){
@@ -70,7 +71,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     //Pageable 로 반환, 페이지 사이즈는 요청에 따라 변경 가능
     @Operation(summary = "물품 검색 결과창", description = "사용자가 물품을 검색하고, 페이지네이션으로 반환합니다.")
     @GetMapping("/search")
-    public ResponseEntity<GoodsResponseDTO> searchGoods(
+    public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> searchGoods(
             String category, // 카테고리
             double priceRangeLow, // 현재 입찰가 범위 low
             double priceRangeHigh, // 현재 입찰가 high
@@ -89,7 +90,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @Operation(summary = "경매 등록자 낙찰자가 매너온도및 후기 지정할 수 있음.", description = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 " +
             "수 있다. 모든 구매를 마치고 후기를 등록하는 API")
     @PostMapping("/review/{goodsId}")
-    public ResponseEntity<List<ReviewDetailResponseDTO>> createReview(
+    public ResponseEntity<ApiResponseDTO<List<ReviewDetailResponseDTO>>> createReview(
             ReviewRequestDTO reviewRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ){
@@ -102,7 +103,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     @Operation(summary = "모든 유저는 상품에 좋아요(찜)를 누를 수 있다.", description = "경매품에 좋아요(찜)를 누를 수 있고 " +
             "해당 상품에 좋아요(찜)를 눌렀으면 취소도 가능한 API")
     @PutMapping("/liked/{goodsId}")
-    public ResponseEntity<LikeResponseDTO> changeLike(
+    public ResponseEntity<ApiResponseDTO<LikeResponseDTO>> changeLike(
             LikeRequestDTO likeRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ){
@@ -112,7 +113,7 @@ public class Goodscontroller implements GoodsControllerDocs{
     // 낙찰자가 실제 결제후 정보를 등록하는 API
     @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는  API")
     @PostMapping("/{goodsId}/{bidId}")
-    public ResponseEntity<BidPurchaseResponseDTO> create(
+    public ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
             BidPurchaseRequestDTO bidPurchaseRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ){
