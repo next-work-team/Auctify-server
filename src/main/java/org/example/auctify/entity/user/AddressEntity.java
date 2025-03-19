@@ -14,11 +14,12 @@ import org.example.auctify.entity.BaseTimeEntity;
  */
 
 @ToString
-@Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity(name= "address")
+@Entity
+@Table(name= "address")
+@Getter
 public class AddressEntity   extends BaseTimeEntity {
 
     @Id
@@ -36,7 +37,7 @@ public class AddressEntity   extends BaseTimeEntity {
     private String zipCode;
 
     @Column(name="defaultAddress", nullable = true)
-    private String defaultAddress;
+    private Boolean defaultAddress;
 
 
     @ManyToOne
@@ -47,10 +48,14 @@ public class AddressEntity   extends BaseTimeEntity {
     public static AddressEntity changeEntity(AddressDTO addressDTO) {
         return AddressEntity.builder()
                 .addr(addressDTO.getAddr())
-                .defaultAddress(addressDTO.getDefaultAddress())
                 .addrDetail(addressDTO.getAddrDetail())
                 .zipCode(addressDTO.getZipCode())
+                .defaultAddress(addressDTO.getDefaultAddress())
                 .build();
+    }
+
+    public void onChangeDefaultAddress(Boolean defaultAddress) {
+        this.defaultAddress = defaultAddress;
     }
 
 

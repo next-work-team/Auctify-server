@@ -11,6 +11,10 @@ import org.example.auctify.entity.user.AddressEntity;
 @ToString
 @Builder
 public class AddressDTO {
+
+    @Schema(description = "주소 번호")
+    private Long addressId;
+
     @Schema(description = "주소")
     private String addr;
     @Schema(description = "상세 주소")
@@ -18,10 +22,11 @@ public class AddressDTO {
     @Schema(description = "우편 번호")
     private String zipCode;
     @Schema(description = "기본주소여부 ")
-    private String defaultAddress;
+    private Boolean defaultAddress;
 
     public static AddressDTO changeDTO(AddressEntity address) {
         return AddressDTO.builder()
+                .addressId(address.getAddressId())
                 .addr(address.getAddr())
                 .addrDetail(address.getAddrDetail())
                 .zipCode(address.getZipCode())
@@ -29,7 +34,7 @@ public class AddressDTO {
                 .build();
     }
 
-    public static AddressDTO addAddress(String userAddr, String userAddressDetail, String userZipCode,String defaultAddress) {
+    public static AddressDTO addAddress(String userAddr, String userAddressDetail, String userZipCode,boolean defaultAddress) {
         return AddressDTO.builder()
                 .addr(userAddr)
                 .addrDetail(userAddressDetail)
@@ -37,5 +42,6 @@ public class AddressDTO {
                 .defaultAddress(defaultAddress)
                 .build();
     }
+
 
 }

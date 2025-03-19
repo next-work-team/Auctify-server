@@ -3,6 +3,7 @@ package org.example.auctify.entity.review;
 import jakarta.persistence.*;
 import lombok.*;
 import org.example.auctify.entity.BaseTimeEntity;
+import org.example.auctify.entity.Goods.GoodsEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
 import org.example.auctify.entity.payment.PaymentEntity;
 import org.example.auctify.entity.user.UserEntity;
@@ -11,7 +12,8 @@ import org.example.auctify.entity.user.UserEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity(name = "review")
+@Entity
+@Table(name = "review")
 public class ReviewEntity extends BaseTimeEntity {
 
     @Id
@@ -39,4 +41,7 @@ public class ReviewEntity extends BaseTimeEntity {
     @JoinColumn(name = "payment_id") // 외래키를 소유 (외래키의 주인)
     private PaymentEntity payment;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "goods_id")
+    private GoodsEntity goods;
 }

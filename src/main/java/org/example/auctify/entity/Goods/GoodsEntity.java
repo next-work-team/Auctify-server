@@ -16,6 +16,7 @@ import org.example.auctify.entity.user.UserEntity;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * worker : 박예빈
@@ -25,7 +26,8 @@ import java.util.List;
 
 
 @Getter
-@Entity(name = "goods")
+@Entity
+@Table(name = "goods")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
@@ -39,50 +41,73 @@ public class GoodsEntity extends BaseTimeEntity {
     @Column(name = "goods_id")
     private Long goodsId;
 
-    @Column(name="goods_name", nullable = false)
-    @Size(min=1, max=10)
+    @Column(name = "goods_name", nullable = false)
+    @Size(min = 1, max = 10)
     private String goodsName;
 
-    @Column(name="goods_description", nullable = false, length = 2000)
-    @Size(min=20, max=2000)
+    @Column(name = "goods_description", nullable = false, length = 2000)
+    @Size(min = 20, max = 2000)
     private String goodsDescription;
 
-    @Column(name="buy_now_price")
+    @Column(name = "buy_now_price")
     private Long buyNowPrice;
 
-    @Column(name="goods_process_status")
+    @Column(name = "goods_process_status")
     private String goodsProcessStatus;
 
 
     @Enumerated(EnumType.STRING)
-    @Column(name="goods_status", nullable = false)
+    @Column(name = "goods_status", nullable = false)
     private GoodsStatus goodsStatus;
 
 
-    @Column(name="minimum_bid_amount", nullable = false)
+    @Column(name = "minimum_bid_amount", nullable = false)
     private Long minimumBidAmount;
 
     //BaseTimeEntity 의 Created_at 이 경매 시작시간이 되게 됩니다.
     //경매 종료 시간만 입력.
-    @Column(name="action_endtime" , nullable = false)
+    @Column(name = "action_endtime", nullable = false)
     private LocalDateTime actionEndTime;
 
+    // 경매를 등록한 유저
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false)
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name="category_id")
+    @JoinColumn(nullable = false, name = "category_id")
     private GoodsCategoryEntity categoryId;
 
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
-    private List<BidHistoryEntity> bidHistories =new ArrayList<BidHistoryEntity>();
+    private List<BidHistoryEntity> bidHistories = new ArrayList<BidHistoryEntity>();
 
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
-    private List<LikeEntity> like =new ArrayList<LikeEntity>();
+    private List<LikeEntity> like = new ArrayList<LikeEntity>();
+
+    @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    @JsonIgnore
+    private List<GoodsImageEntity> image = new ArrayList<GoodsImageEntity>();
+
+
+    public String getFirstImage(){
+        String firstImage = "";
+        if (!Objects.isNull(image) && !image.isEmpty()) {
+            firstImage = image.get(0).getImageSrc();
+        }
+        return firstImage;
+    }
+
+    public Long getMaxBidPrice(){
+        return bidHistories.stream()
+                .mapToLong(BidHistoryEntity::getBidPrice)
+                .max()
+                .orElse(0);
+
+    }
 
 }

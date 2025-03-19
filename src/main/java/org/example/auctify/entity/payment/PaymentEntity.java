@@ -15,7 +15,8 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity(name = "payment")
+@Entity
+@Table(name = "payment")
 public class PaymentEntity extends BaseTimeEntity {
 
     @Id

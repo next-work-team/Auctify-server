@@ -12,7 +12,8 @@ import org.example.auctify.entity.user.UserEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity(name = "bid_history")
+@Entity
+@Table(name = "bid_history")
 public class BidHistoryEntity extends BaseTimeEntity {
 
 
@@ -26,7 +27,7 @@ public class BidHistoryEntity extends BaseTimeEntity {
     //boolean 타입은 **BIT(1)**로 저장됩니다.
     // **BIT(1)**은 0 또는 1을 저장할 수 있는 1비트 크기의 컬럼 타입입니다.
     @Column(name = "cancel_flag")
-    private boolean cancelFlag;
+    private Boolean cancelFlag;
 
     // 입찰 금액
     @Column(name = "bid_price")
@@ -34,7 +35,7 @@ public class BidHistoryEntity extends BaseTimeEntity {
 
     //낙찰 여부
     @Column(name = "goods_status")
-    private boolean goodsStatus;
+    private Boolean goodsStatus;
 
 
     //경매 참여자 ID 현 엔티티가 왜래키 주인

@@ -8,7 +8,8 @@ import org.example.auctify.entity.BaseTimeEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @Builder
-@Entity(name = "goods_image")
+@Entity
+@Table(name = "goods_image")
 public class GoodsImageEntity extends BaseTimeEntity {
 
     @Id
@@ -18,14 +19,14 @@ public class GoodsImageEntity extends BaseTimeEntity {
 
     @ManyToOne(fetch= FetchType.LAZY)
     @JoinColumn(name="goods_id", nullable = false)
-    private GoodsEntity goodsId;
+    private GoodsEntity goods;
 
-    private String image_src;
+    private String imageSrc;
 
     public static GoodsImageEntity of(GoodsEntity goods, String image_src){
         return GoodsImageEntity.builder()
-                .goodsId(goods)
-                .image_src(image_src)
+                .goods(goods)
+                .imageSrc(image_src)
                 .build();
     }
 }
