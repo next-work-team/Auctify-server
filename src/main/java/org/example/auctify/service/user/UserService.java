@@ -74,6 +74,7 @@ public class UserService {
         user.onChangeProfileImage(userInfoRequestDTO.getProfileImage());
         user.onChangeNickname(userInfoRequestDTO.getNickname());
         user.onChangeBirthday(userInfoRequestDTO.getBirthdate());
+        user.onChangeEmail(userInfoRequestDTO.getEmail());
 
         if(userInfoRequestDTO.getAddressDTO() != null)
             user.onChangeDefaultAddress(userInfoRequestDTO.getAddressDTO().getAddressId());
@@ -83,6 +84,7 @@ public class UserService {
                 .userId(user.getUserId())
                 .nickName(user.getNickName())
                 .profileImage(user.getImage())
+                .email(user.getEmail())
                 .birthdate(user.getBirthday() != null ? user.getBirthday().toString() : null)
                 .addressDTO(userInfoRequestDTO.getAddressDTO())
                 .build();
@@ -219,5 +221,21 @@ public class UserService {
     }
 
 
+    public AddressDTO changDefaultAddress(Long userId, AddressDTO defaultAddressDTO) {
+        UserEntity user = userRepository.findByIdWithAddresses(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found with ID: " + userId));
+        List<AddressEntity> addressList = user.getAddress();
+        Optional<AddressEntity> existingAddress = addressList.stream()
+                .filter(address -> address.getAddressId().equals(defaultAddressDTO.getAddressId()))
+                .findAny();
+        if (existingAddress.isPresent()) {
+            // 이미 주소가 존재할 때 처리 정상적으로 처리
+            user.onChangeDefaultAddress(defaultAddressDTO.getAddressId());
+            return defaultAddressDTO;
+        } else {
+            // 주소가 존재하지 않을 때 처리 에러 발생
+            throw new RuntimeException("올바르지 않은 주소입니다.");
+        }
+    }
 
 }
