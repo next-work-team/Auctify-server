@@ -52,8 +52,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
 
-        // 개발시 9시간 60 * 60 * 1000L = 1시간
-        String token = jwtUtil.createJwt(userId,name,oauthId,role, 60 * 60 * 9L);
+        // 1시간 = 3600 000 /  24일로 설정
+        String token = jwtUtil.createJwt(userId,name,oauthId,role, 60 * 60 * 1000L * 24 * 24);
 
         response.addCookie(createCookie("Authorization", token,request));
         // 사용자가 원래 요청했던 URL 가져오기
@@ -88,8 +88,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     private Cookie createCookie(String key, String value, HttpServletRequest request) {
 
+        //1시간 = 3600 / 24일로 설정
         Cookie cookie = new Cookie(key, value);
-        cookie.setMaxAge(60 * 60 * 9);
+        cookie.setMaxAge(3600 * 24 * 24);
 
         boolean isLocal = request.getServerName().contains("localhost");
 
