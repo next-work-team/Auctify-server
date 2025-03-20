@@ -19,6 +19,10 @@ public class UserInfoRequestDTO {
     @Schema(description = "회원 이미지")
     private String profileImage;
 
+
+    @Schema(description = "회원 이메일")
+    private String email;
+
     //Jackson 을 이용하면 yyyy-mm-dd 형식의 문자열은 자동으로 인식한다.
     @Schema(description = "회원 생년월일")
     private LocalDate birthdate;

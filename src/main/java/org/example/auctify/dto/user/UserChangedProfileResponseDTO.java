@@ -20,6 +20,9 @@ public class UserChangedProfileResponseDTO {
     @Schema(description = "회원 이미지")
     private String profileImage;
 
+    @Schema(description = "이메일")
+    private String email;
+
     @Schema(description = "회원 생년월일")
     private String birthdate;
 

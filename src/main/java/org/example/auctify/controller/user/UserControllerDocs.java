@@ -3,9 +3,11 @@ package org.example.auctify.controller.user;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.Pattern;
 import org.example.auctify.dto.Goods.GoodsResponseSummaryDTO;
 import org.example.auctify.dto.Goods.ReviewDetailResponseDTO;
 import org.example.auctify.dto.Goods.GoodsResponseDTO;
+import org.example.auctify.dto.duplication.DuplicationDTO;
 import org.example.auctify.dto.like.LikeGoodsResponseDTO;
 import org.example.auctify.dto.response.ApiResponseDTO;
 import org.example.auctify.dto.social.CustomOauth2User;
@@ -13,6 +15,7 @@ import org.example.auctify.dto.user.*;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -77,16 +80,38 @@ public interface UserControllerDocs {
     ResponseEntity<ApiResponseDTO<List<AddressDTO>>>  getListAddress(
             @AuthenticationPrincipal CustomOauth2User userDetails);
 
-    //Last-Event-ID는 SSE 연결이 끊어질 경우,
-    // 클라이언트가 수신한 마지막 데이터의 id값을 의미합니다. 항상 존재하는 것이 아니기 때문에 false
-    @Operation(summary = "알람을 구독함 ", description = "알람을 구독하는 API" +
-            "(SSE연결을 위한 API이다 !!" )
-    ResponseEntity<?> subscribe(@AuthenticationPrincipal CustomOauth2User userDetails, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "")String lastEventId);
-
 
     @Operation(summary = "주소 등록", description = "주소 등록하고 등록된 주소를 전달 ")
     ResponseEntity<ApiResponseDTO<AddressDTO>> postAddress(
             @Validated AddressRequestDTO addressRequestDTO,
             BindingResult bindingResult,
             CustomOauth2User userDetails);
+
+
+
+
+
+        @Operation(summary = "이메일 중복 확인", description = "이메일 중복 확인하는 API (참고 : 최초 가입시에는 중복될 수 있음 소셜 로그인에서 받아오기 때문)")
+        public ResponseEntity<ApiResponseDTO<DuplicationDTO>> checkEmail(
+                @RequestParam
+                String email);
+
+
+        @Operation(summary = "닉네임 중복을 확인하는 API", description = "닉네임 중복 여부를 확인하는 API (참고 : 최초 가입시에는 중복될 수 있음 소셜 로그인에서 받아오기 때문)")
+        public ResponseEntity<ApiResponseDTO<DuplicationDTO>> checkNickname(
+                @RequestParam
+                String nickname) ;
+
+    @Operation(summary = "기본 주소를 정하는 API", description = "기본 주소를 변경하는 API 등록된 주소중에서 원하는 주소를 전달하면 해당 주소로 기본 주소가 설정된다. \n 기존에 다른 기본 주소는 기본주소가 아니게 된다. \n 주소 번호 전달 필수 ")
+    public ResponseEntity<ApiResponseDTO<AddressDTO>> changeDefaultAddress(
+            AddressDTO defaultAddressDTO
+            ,CustomOauth2User userDetails);
+
+
+    //Last-Event-ID는 SSE 연결이 끊어질 경우,
+    // 클라이언트가 수신한 마지막 데이터의 id값을 의미합니다. 항상 존재하는 것이 아니기 때문에 false
+    @Operation(summary = "알람을 구독함 ", description = "알람을 구독하는 API" +
+            "(SSE연결을 위한 API이다 !!")
+    ResponseEntity<?> subscribe(@AuthenticationPrincipal CustomOauth2User userDetails, @RequestHeader(value = "Last-Event-ID", required = false, defaultValue = "") String lastEventId);
+
 }
