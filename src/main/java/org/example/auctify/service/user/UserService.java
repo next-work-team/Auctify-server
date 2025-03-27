@@ -188,6 +188,10 @@ public class UserService {
                     .goodsName(likeEntity.getGoods().getGoodsName())
                     .imageUrls(likeEntity.getGoods().getFirstImage())
                     .endTime(likeEntity.getGoods().getActionEndTime())
+                    .goodsProcessStatus(likeEntity.getGoods().getGoodsProcessStatus())
+                    .goodsStatus(likeEntity.getGoods().getGoodsStatus())
+                    .category(likeEntity.getGoods().getCategory())
+                    .currentBidCount((long) likeEntity.getGoods().getBidHistories().size())
                     .build();
         });
 
