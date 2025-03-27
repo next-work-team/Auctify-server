@@ -1,9 +1,10 @@
 package org.example.auctify.dto.social;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Collection;
 import java.util.Map;
 
@@ -12,51 +13,36 @@ public class CustomOauth2User implements OAuth2User {
     private final UserDTO userDTO;
 
     public CustomOauth2User(UserDTO userDTO) {
-        System.out.println( "userDTO 가져온거 "+userDTO.toString());
+        System.out.println("userDTO 가져온거 " + userDTO.toString());
         this.userDTO = userDTO;
     }
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        return Collections.emptyMap(); // 빈 Map 리턴이 안전함
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-        Collection<GrantedAuthority> collection = new ArrayList<>();
-
-        collection.add(new GrantedAuthority() {
-
-            @Override
-            public String getAuthority() {
-
-                return userDTO.getRole().toString();
-            }
-        });
-
-        return collection;
+        return Collections.singletonList(
+                new SimpleGrantedAuthority(userDTO.getRole().name())
+        );
     }
+
     @Override
     public String getName() {
-
         return userDTO.getName();
     }
 
     public String getOauthId() {
-
         return userDTO.getOauthId();
     }
 
     public String getRole() {
-
-        return userDTO.getRole().toString();
+        return userDTO.getRole().name();
     }
 
     public Long getUserId() {
         return userDTO.getUserId();
     }
-
-
-
 }

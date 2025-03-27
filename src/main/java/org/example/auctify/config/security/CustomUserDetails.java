@@ -57,7 +57,9 @@ public class CustomUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> collection = new ArrayList<>();
         Role userRole = user.getRole();
-        collection.add(new SimpleGrantedAuthority(user.getRole().toString()));
+        System.out.println("뭘까요 에러가 ???" + userRole.toString());
+
+        collection.add(new SimpleGrantedAuthority("ROLE_"+user.getRole().toString()));
         return collection;
     }
 

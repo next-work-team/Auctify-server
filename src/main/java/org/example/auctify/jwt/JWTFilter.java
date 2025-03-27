@@ -89,6 +89,7 @@ public class JWTFilter extends OncePerRequestFilter {
 //        SecurityContextHolder.setContext(securityContext);
 
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        logger.info("인증객체 권한 확인 에러로그: " + authToken.getAuthorities());
 
 
         logger.info("SecurityContext에 인증 정보 설정 완료: " + SecurityContextHolder.getContext().getAuthentication());

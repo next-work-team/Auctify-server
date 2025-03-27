@@ -1,6 +1,7 @@
 package org.example.auctify.config.security;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.auctify.jwt.JWTFilter;
 import org.example.auctify.jwt.JWTUtil;
 import org.example.auctify.oauth2.CustomSuccessHandler;
@@ -16,6 +17,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
@@ -83,9 +85,13 @@ public class SecurityConfig {
         http
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
+//        http
+//                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
         //JWTFilter 추가
         http
                 .addFilterBefore(new JWTFilter(jwtUtil), OAuth2AuthorizationCodeGrantFilter.class);
+
+
 
         // oauth2
         http
@@ -103,6 +109,11 @@ public class SecurityConfig {
                         .requestMatchers("/my").hasRole("USER")  // ✅ USER 권한 필요
                         .anyRequest().authenticated());  // ✅ 나머지는 인증 필요
 
+//        http
+//                .exceptionHandling(exceptions -> exceptions
+//                .authenticationEntryPoint((request, response, authException) -> {
+//                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+//                }));
 
         return http.build();
     }
