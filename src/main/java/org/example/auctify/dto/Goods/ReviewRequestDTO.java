@@ -25,6 +25,9 @@ public class ReviewRequestDTO {
     @Schema(description = "구매 id")
     private Long paymentId;
 
+    @Schema(description = "리뷰 받는 유저 id")
+    private Long receiver;
+
     @Schema(description = "후기 내용")
     private String content;
 

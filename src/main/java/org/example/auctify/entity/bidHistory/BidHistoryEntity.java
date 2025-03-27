@@ -34,8 +34,8 @@ public class BidHistoryEntity extends BaseTimeEntity {
     private Long bidPrice;
 
     //낙찰 여부
-    @Column(name = "goods_status")
-    private Boolean goodsStatus;
+    @Column(name = "bid_status")
+    private Boolean bidStatus;
 
 
     //경매 참여자 ID 현 엔티티가 왜래키 주인
@@ -51,5 +51,10 @@ public class BidHistoryEntity extends BaseTimeEntity {
     // 추가된 부분 (양방향 매핑)
     @OneToOne(mappedBy = "bidHistory", fetch = FetchType.LAZY)
     private PaymentEntity payment;
+
+
+    public void onChangeCancelFlag(boolean flag) {
+        this.cancelFlag = flag;
+    }
 
 }

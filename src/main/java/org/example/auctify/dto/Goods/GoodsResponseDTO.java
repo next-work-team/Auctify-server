@@ -28,9 +28,9 @@ public class GoodsResponseDTO {
     @Schema(description = "즉시 구매가 입니다.")
     private Long buyNowPrice;
     @Schema(description = "경매 진행 상태입니다.")
-    private String goodsProcessStatus;
+    private GoodsProcessStatus goodsProcessStatus;
     @Schema(description = "상품 상태입니다.")
-    private String goodsStatus;
+    private GoodsStatus goodsStatus;
     @Schema(description = "최소 경매 진행가 입니다.")
     private Long minimumBidAmount;
     @Schema(description = "경매 종료 시각입니다.")
@@ -38,19 +38,13 @@ public class GoodsResponseDTO {
     @Schema(description = "경매 주인 user id 입니다.")
     private Long userId;
     @Schema(description = "상품 카테고리 id 입니다.")
-    private Long categoryId;
+    private GoodsCategory category;
 
     @Schema(description = "현재입찰가 입니다.")
     private Long currentBidPrice;
 
-    @Schema(description = "남은 시간(초 단위)입니다.")
-    private Long remainingTime;
 
-    @Schema(description = "실시간 참여자 수입니다.") //나중에 Redis 나 웹소켓에서
-    private Integer participantCount;
 
-    @Schema(description = "실시간 입찰기록 입니다.")
-    private String tenderRecords; //정확히 무슨 정보인지 모르겠어서 우선 String 처리
 
     @Schema(description = "포함된 상품 사진들입니다.")
     private List<String> imageUrls;
@@ -61,5 +55,6 @@ public class GoodsResponseDTO {
         if (actionEndTime == null) return 0L;
         return Duration.between(LocalDateTime.now(),actionEndTime).toSeconds();
     }
+
 
 }

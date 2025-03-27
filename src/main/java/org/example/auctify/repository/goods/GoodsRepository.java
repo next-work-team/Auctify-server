@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface GoodsRepository extends JpaRepository<GoodsEntity, Long> {
+import java.util.Optional;
+
+public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsRepositoryCustom {
 
 
     //JPQL에서 JOIN FETCH를 사용할 경우 COUNT(*) 같은
@@ -21,5 +23,15 @@ public interface GoodsRepository extends JpaRepository<GoodsEntity, Long> {
     @Query("SELECT g FROM GoodsEntity g WHERE g.user.userId = :userId" +
             " Order BY g.goodsId DESC")
     Page<GoodsEntity> findGoodsByUserId(@Param("userId") Long userId, Pageable pageable);
+
+
+    @EntityGraph(attributePaths = {
+            "image"
+            ,"bidHistories"
+    })
+    @Query("SELECT g FROM GoodsEntity g where g.goodsId = :goodsId")
+    Optional<GoodsEntity> findGoodsImageBidHistoryByGoodsId(Long goodsId);
+
+
 
 }
