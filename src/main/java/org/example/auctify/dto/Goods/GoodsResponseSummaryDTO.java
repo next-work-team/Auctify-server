@@ -21,7 +21,7 @@ public class GoodsResponseSummaryDTO {
     private String goodsName;
 
     @Schema(description = "경매 낙찰여부")
-    private String goodsProcessStatus;
+    private GoodsProcessStatus goodsProcessStatus;
 
     @Schema(description = "현재 최고 입찰가")
     private Long currentBidPrice;
@@ -31,4 +31,17 @@ public class GoodsResponseSummaryDTO {
 
     @Schema(description = "경매 종료 시간")
     private LocalDateTime endTime;
+
+    @Schema(description = "카테고리")
+    private GoodsCategory category;
+
+    @Schema(description = "상품 상태 새것, 중고")
+    private GoodsStatus goodsStatus;
+
+    @Schema(description = "현재 입찰 수")
+    private Long currentBidCount;
+
+
+
+
 }

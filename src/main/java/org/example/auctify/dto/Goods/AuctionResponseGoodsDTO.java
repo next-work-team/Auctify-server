@@ -48,7 +48,7 @@ public class AuctionResponseGoodsDTO {
     private double MaxBidPrice;
 
     @Schema(description = "경매 낙찰 여부")
-    private GoodsStatus goodsStatus;
+    private GoodsProcessStatus goodsProcessStatus;
 
     @Schema(description = "경매 낙찰자 ID 없거나 진행중이면 빈 문자열")
     private String auctionId;

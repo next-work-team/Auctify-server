@@ -1,0 +1,208 @@
+package org.example.auctify.controller.auction;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.example.auctify.dto.Goods.*;
+import org.example.auctify.dto.bid.BidHistoryResponseDTO;
+import org.example.auctify.dto.response.ApiResponseDTO;
+import org.example.auctify.dto.social.CustomOauth2User;
+import org.example.auctify.service.auction.GoodsService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * worker : 조영흔
+ * work : 요구사항을 보고 수정 작업 진행
+ * date    : 2025/03/12
+ */
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("/api/auction") //검색,물품정보,물품 등록
+@Log4j2
+@Validated
+public class GoodsController implements GoodsControllerDocs {
+
+
+    private final GoodsService goodsService;
+
+
+
+    // 경매 물품 정보를 반환 (상세 조회)
+    @GetMapping("/{goodsId}")
+    public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> getGoods(
+        @Parameter(description = "조회할 물품 ID", example = "1")
+        @PathVariable("goodsId") Long goodsId) {
+        try {
+            GoodsResponseDTO goodsResponseDTO = goodsService.searchGoodsId(goodsId);
+            return ResponseEntity.ok(ApiResponseDTO.success(goodsResponseDTO));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "Get Auction Goods"));
+        }
+    }
+
+    //경매품을 등록
+    @PostMapping
+    public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> createGoods(
+            CustomOauth2User userDetails,
+            @RequestBody GoodsRequestDTO goodsRequestDTO
+    ) {
+        try {
+            Long userId = userDetails.getUserId();
+            GoodsResponseDTO goodsResponseDTO = goodsService.createActionsGoods(userId, goodsRequestDTO);
+            return ResponseEntity.ok(ApiResponseDTO.success(goodsResponseDTO));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "Create Auction Goods"));
+        }
+    }
+
+    // 실시간 입찰
+    @PostMapping("/bid")
+    public ResponseEntity<ApiResponseDTO<BidHistoryResponseDTO>> createBid(
+            @RequestBody BidRequestDTO bidRequestDTO,
+            CustomOauth2User userDetails
+    ) {
+        try {
+            Long userId = userDetails.getUserId();
+            BidHistoryResponseDTO bidHistoryResponseDTO = goodsService.bidAuctionGoods(userId, bidRequestDTO);
+            return ResponseEntity.ok(ApiResponseDTO.success(bidHistoryResponseDTO));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "Bid Auctions Goods"));
+        }
+    }
+
+    // 실시간 입찰 취소
+    @PutMapping("/bid/{bidHistoryId}")
+    public ResponseEntity<ApiResponseDTO<BidHistoryResponseDTO>> cancelBid(
+            Long bidHistoryId,
+            @AuthenticationPrincipal CustomOauth2User userDetails
+    ) {
+        try {
+            Long userId = userDetails.getUserId();
+            BidHistoryResponseDTO bidHistoryResponseDTO = goodsService.cancelBidAuctions(userId, bidHistoryId);
+            return ResponseEntity.ok(ApiResponseDTO.success(bidHistoryResponseDTO));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "Bid Cancel Auctions Goods"));
+        }
+    }
+
+
+    //사용자는 경매 리스트 조회 가능
+    //Pageable 로 반환, 페이지 사이즈는 요청에 따라 변경 가능
+    @GetMapping("/search")
+    public ResponseEntity<ApiResponseDTO<Page<GoodsResponseSummaryDTO>>> searchGoods(
+            String category,
+            Double priceRangeLow,
+            Double priceRangeHigh,
+            String goodsStatus,
+            String goodsProcessStatus,
+            String goodsName,
+            String sort,
+            int page,
+            int size
+    ) {
+        try {
+            Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+            Page<GoodsResponseSummaryDTO> result =
+                    goodsService.searchGoods(category, priceRangeLow, priceRangeHigh, goodsStatus,goodsProcessStatus,goodsName,sort,pageable);
+            return ResponseEntity.ok(ApiResponseDTO.success(result));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponseDTO.error(500, "Search Goods Error"));
+        }
+    }
+
+    //매너 온도 평가 가능 + 후기 구매자만 후기를 작성할 수 있다.
+    @PostMapping("/review/{goodsId}")
+    public ResponseEntity<ApiResponseDTO<ReviewDetailResponseDTO>> createReview(
+            ReviewRequestDTO reviewRequestDTO,
+            @AuthenticationPrincipal CustomOauth2User userDetails
+    ) {
+        try {
+            Long userId = userDetails.getUserId();
+            ReviewDetailResponseDTO reviewDetailResponseDTO = goodsService.createReview(userId, reviewRequestDTO);
+
+            return ResponseEntity.ok(ApiResponseDTO.success(reviewDetailResponseDTO));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "create Review"));
+        }
+    }
+
+
+    @PostMapping("/liked/{goodsId}")
+    public ResponseEntity<ApiResponseDTO<String>> createLike(
+            Long goodsId,
+            LikeRequestDTO likeRequestDTO,
+            @AuthenticationPrincipal CustomOauth2User userDetails
+    ) {
+        try {
+            Long userId = userDetails.getUserId();
+            goodsService.createLike(userId, goodsId);
+            return ResponseEntity.ok(ApiResponseDTO.success("좋아요로 바뀜"));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "Goods Like"));
+        }
+    }
+
+    @DeleteMapping("/liked/{goodsId}")
+    public ResponseEntity<ApiResponseDTO<String>> cancelLike(
+            Long goodsId,
+            LikeRequestDTO likeRequestDTO,
+            @AuthenticationPrincipal CustomOauth2User userDetails
+    ) {
+        try {
+            Long userId = userDetails.getUserId();
+            goodsService.cancelLike(userId, goodsId);
+            return ResponseEntity.ok(ApiResponseDTO.success("좋아요 상태 취소 "));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseDTO.error(400, "Goods Like"));
+        }
+    }
+
+    // 낙찰자가 실제 결제후 정보를 등록하는 API
+    @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는  API")
+    @PostMapping("/{goodsId}/{bidId}")
+    public ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
+            BidPurchaseRequestDTO bidPurchaseRequestDTO,
+            @AuthenticationPrincipal CustomOauth2User userDetails
+    ) {
+        return ResponseEntity.ok(null);
+    }
+
+    // swagger을 연결하는 API 실제 구현은 따로해야함
+    @Operation(summary = "WebSocket 연결", description = "클라이언트와 서버 간 실시간 연결을 위한 WebSocket을 설정합니다." +
+            "실제로는 따로 구현해야함 추후에 삭제 예정 (swagger를 위해서 작성함)")
+    @GetMapping("/ws/connect")
+    public String connectWebSocket() {
+        // WebSocket 연결에 대한 로직은 Spring WebSocket 또는 다른 기술로 처리합니다.
+        return "WebSocket 연결 성공! 클라이언트와 서버가 실시간 통신을 시작합니다.";
+    }
+
+
+}

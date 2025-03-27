@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
+
 
 public interface ReviewRepository  extends JpaRepository<ReviewEntity, Long> {
 
@@ -24,6 +26,12 @@ public interface ReviewRepository  extends JpaRepository<ReviewEntity, Long> {
     })
     @Query("SELECT r FROM ReviewEntity r WHERE r.receiverUser = :receiverUser ORDER BY r.createdAt DESC")
     Page<ReviewEntity> findReviewsByReceiverUser(@Param("receiverUser") UserEntity receiverUser, Pageable pageable);
+
+
+    Optional<ReviewEntity> findByWriterUser_UserIdAndGoods_GoodsId(Long userId, Long goodsId);
+
+
+
 
 
 

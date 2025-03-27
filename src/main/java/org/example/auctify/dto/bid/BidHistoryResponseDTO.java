@@ -2,6 +2,7 @@ package org.example.auctify.dto.bid;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
+import org.example.auctify.dto.Goods.GoodsProcessStatus;
 
 @Getter
 @Setter
@@ -19,11 +20,11 @@ public class BidHistoryResponseDTO {
     @Schema(description = " 상품(경매) 이름")
     private String goodsName;
 
-    @Schema(description = "상품에 대한 입찰 취소 여부")
+    @Schema(description = "상품에 대한 입찰 취소 여부, 기록은 남음")
     private boolean cancelFlag;
 
     @Schema(description = "상품 낙찰여부")
-    private boolean goodsProcessStatus;
+    private GoodsProcessStatus goodsProcessStatus;
 
     @Schema(description = "등록된 첫번째 이미지")
     private String imageUrls;

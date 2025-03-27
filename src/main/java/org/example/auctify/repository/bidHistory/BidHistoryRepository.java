@@ -17,7 +17,7 @@ public interface BidHistoryRepository extends JpaRepository<BidHistoryEntity, Lo
     // EntityGraph 사용 필수
     @EntityGraph(attributePaths = {
             "goods",
-            "goods.images",
+            "goods.image",
             "goods.bidHistories"
     })
     @Query("""

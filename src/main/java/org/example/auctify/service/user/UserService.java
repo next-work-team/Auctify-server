@@ -137,6 +137,9 @@ public class UserService {
                     .currentBidPrice(highestBidPrice)
                     .imageUrls(goodsEntity.getFirstImage())
                     .endTime(goodsEntity.getActionEndTime())
+                    .goodsStatus(goodsEntity.getGoodsStatus())
+                    .category(goodsEntity.getCategory())
+                    .currentBidCount((long) goodsEntity.getBidHistories().size())
                     .build();
         });
     }
@@ -158,7 +161,7 @@ public class UserService {
                     .goodsId(bidHistoryEntity.getGoods().getGoodsId())
                     .goodsName(bidHistoryEntity.getGoods().getGoodsName())
                     .cancelFlag(bidHistoryEntity.getCancelFlag())
-                    .goodsProcessStatus(Objects.isNull(bidHistoryEntity.getPayment()))
+                    .goodsProcessStatus(bidHistoryEntity.getGoods().getGoodsProcessStatus())
                     .imageUrls(bidHistoryEntity.getGoods().getFirstImage())
                     .bidPrice(bidHistoryEntity.getBidPrice())
                     .bidMaxPrice(bidHistoryEntity.getGoods().getMaxBidPrice())

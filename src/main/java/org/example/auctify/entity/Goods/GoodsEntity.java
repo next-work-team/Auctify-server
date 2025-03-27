@@ -5,18 +5,23 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
-import org.apache.catalina.User;
+import org.example.auctify.dto.Goods.GoodsCategory;
+import org.example.auctify.dto.Goods.GoodsProcessStatus;
 import org.example.auctify.dto.Goods.GoodsStatus;
-import org.example.auctify.dto.user.Role;
 import org.example.auctify.entity.BaseTimeEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
 import org.example.auctify.entity.like.LikeEntity;
 import org.example.auctify.entity.user.UserEntity;
+import com.querydsl.core.types.dsl.CaseBuilder;
+import com.querydsl.core.types.dsl.NumberExpression;
+
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * worker : 박예빈
@@ -52,15 +57,15 @@ public class GoodsEntity extends BaseTimeEntity {
     @Column(name = "buy_now_price")
     private Long buyNowPrice;
 
-    @Column(name = "goods_process_status")
-    private String goodsProcessStatus;
-
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "goods_status", nullable = false)
+    // 상품 상태 new 중고
+    @Column(name = "goods_status")
     private GoodsStatus goodsStatus;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "goods_process_status", nullable = false)
+    private GoodsProcessStatus goodsProcessStatus;
 
+    // 최소 입찰 가격
     @Column(name = "minimum_bid_amount", nullable = false)
     private Long minimumBidAmount;
 
@@ -74,9 +79,10 @@ public class GoodsEntity extends BaseTimeEntity {
     @JoinColumn(nullable = false)
     private UserEntity user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "category_id")
-    private GoodsCategoryEntity categoryId;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "goods_category", nullable = false)
+    private GoodsCategory category;
 
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
@@ -109,5 +115,26 @@ public class GoodsEntity extends BaseTimeEntity {
                 .orElse(0);
 
     }
+
+    public Long getCurrentBidPrice(){
+        // 현재 입찰가
+        Long currentPrice;
+        currentPrice = getMaxBidPrice()
+                > minimumBidAmount ? getMaxBidPrice() : minimumBidAmount;
+        return currentPrice;
+    }
+
+
+    public List<String> getImageUrls() {
+        if (image == null || image.isEmpty()) {
+            return Collections.emptyList(); // 빈 리스트 반환 권장 (null보다는 빈 리스트)
+        }
+
+        return image.stream()
+                .map(img -> img.getImageSrc())
+                .collect(Collectors.toList());
+    }
+
+
 
 }
