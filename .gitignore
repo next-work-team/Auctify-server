@@ -45,8 +45,12 @@ src/main/resources/application-jwt.yml
 src/main/resources/application-local.yml
 src/main/resources/application-s3.yml
 src/main/resources/application-oauth2.yml
+src/main/resources/docker-compose.yml
 src/test/resources/application-test.yml
 src/test/resources/application.yml
+
+### data ###
+src/main/resources/data
 
 ###.env###
 .env
