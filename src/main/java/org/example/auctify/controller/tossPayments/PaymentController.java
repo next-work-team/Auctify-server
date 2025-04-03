@@ -30,7 +30,7 @@ import java.util.Base64;
 @RequiredArgsConstructor
 @RequestMapping("/api/pay")
 @Log4j2
-public class PaymentController {
+public class PaymentController implements  PaymentInterface{
 
     private static final String WIDGET_SECRET_KEY = "test_gsk_docs_OaPz8L5KdmQXkzRz3y47BMw6";
     //private static final String API_SECRET_KEY = "test_sk_DnyRpQWGrNDxm0Gogva23Kwv1M9E";
@@ -38,7 +38,7 @@ public class PaymentController {
     private final PaymentService paymentService;
 
     @PostMapping(value = "/confirm")
-    public ResponseEntity<ApiResponseDTO<PaymentResponseDTO>> confirmPayment(@RequestBody PayRequestDTO payRequestDTO) throws Exception {
+    public ResponseEntity<ApiResponseDTO<PaymentResponseDTO>> confirmPayment(@RequestBody PayRequestDTO payRequestDTO) {
         try {
             System.out.println(">>> [confirmPayment] 수신된 JSON: " + payRequestDTO.toString());
 
