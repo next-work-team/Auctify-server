@@ -68,6 +68,10 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JSON 라이브러리
+    implementation 'com.googlecode.json-simple:json-simple:1.1.1'
+
 }
 
 
