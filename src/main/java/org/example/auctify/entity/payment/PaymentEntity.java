@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.*;
 import net.minidev.json.annotate.JsonIgnore;
 import org.example.auctify.entity.BaseTimeEntity;
+import org.example.auctify.entity.Goods.GoodsEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
 import org.example.auctify.entity.review.ReviewEntity;
+import org.example.auctify.entity.user.AddressEntity;
 import org.example.auctify.entity.user.UserEntity;
 
 import java.util.ArrayList;
@@ -24,10 +26,13 @@ public class PaymentEntity extends BaseTimeEntity {
     @Column(name = "payment_id")
     private Long paymentId;
 
-
     //결제 방식
     @Column(name = "type")
     private String type;
+
+    //총액
+    @Column(name = "amount")
+    private Long amount;
 
     //결제 유저
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,6 +42,10 @@ public class PaymentEntity extends BaseTimeEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bidHistory_id") // 외래키를 소유 (외래키의 주인)
     private BidHistoryEntity bidHistory;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private AddressEntity address;
 
 
     // 연관관계의 주인은 ReviewEntity 결제가 수정삭제될 때 리뷰도 영향을 받음
