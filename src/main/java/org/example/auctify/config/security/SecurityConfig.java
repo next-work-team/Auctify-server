@@ -83,7 +83,10 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/oauth2/**", "/login/oauth2/**", "/favicon.ico", "/presigned", "123",
                         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/auth/**","/api/pay/**").permitAll()
-                .requestMatchers(HttpMethod.POST, "/presigned").permitAll()
+                .requestMatchers(HttpMethod.GET, "api/user/{userId}").permitAll()
+                .requestMatchers(HttpMethod.GET, "api/auction/{goodsId}").permitAll()
+                .requestMatchers(HttpMethod.GET, "api/auction/search").permitAll()
+
                 .requestMatchers("/my").hasRole("USER")  // '/my' 경로는 USER 권한 필요
                 .anyRequest().authenticated());  // 그 외 모든 요청은 인증 필요
 

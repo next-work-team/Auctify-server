@@ -32,13 +32,13 @@ import java.util.List;
 @RequiredArgsConstructor
 @Log4j2
 public class GoodsService {
-    private GoodsRepository goodsRepository;
-    private UserRepository userRepository;
-    private GoodsImageRepository goodsImageRepository;
-    private BidHistoryRepository bidHistoryRepository;
-    private LikeRepository likeRepository;
-    private ReviewRepository reviewRepository;
-    private PaymentRepository paymentRepository;
+    private final GoodsRepository goodsRepository;
+    private final UserRepository userRepository;
+    private final GoodsImageRepository goodsImageRepository;
+    private final BidHistoryRepository bidHistoryRepository;
+    private final LikeRepository likeRepository;
+    private final ReviewRepository reviewRepository;
+    private final PaymentRepository paymentRepository;
 
 
 
