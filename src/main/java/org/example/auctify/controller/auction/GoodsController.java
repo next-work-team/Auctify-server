@@ -130,7 +130,7 @@ public class GoodsController implements GoodsControllerDocs {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
             // 로그인 여부에 따라 userId를 넘길지 결정
-            Long userId = (userDetails != null) ? userDetails.getUserId() : null;
+            Long userId = (userDetails != null) ? userDetails.getUserId() : -1;
 
             Page<GoodsResponseSummaryDTO> result =
                     goodsService.searchGoods(userId, category, priceRangeLow, priceRangeHigh, goodsStatus,goodsProcessStatus,goodsName,sort,pageable);
