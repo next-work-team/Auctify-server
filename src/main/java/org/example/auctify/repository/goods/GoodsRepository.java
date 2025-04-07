@@ -1,5 +1,6 @@
 package org.example.auctify.repository.goods;
 
+import org.example.auctify.dto.bid.BidSummaryDTO;
 import org.example.auctify.entity.Goods.GoodsEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsRepositoryCustom {
@@ -31,6 +33,18 @@ public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsR
     })
     @Query("SELECT g FROM GoodsEntity g where g.goodsId = :goodsId")
     Optional<GoodsEntity> findGoodsImageBidHistoryByGoodsId(Long goodsId);
+
+    @Query("SELECT new org.example.auctify.dto.bid.BidSummaryDTO(" +
+            "b.bidHistoryId, b.bidPrice, b.createdAt) " +
+            "FROM BidHistoryEntity b " +
+            "WHERE b.goods.goodsId = :goodsId " +
+            "ORDER BY b.createdAt DESC")
+    List<BidSummaryDTO> findTopBidHistoryByGoodsId(
+            @Param("goodsId") Long goodsId,
+            Pageable pageable
+    );
+
+
 
 
 

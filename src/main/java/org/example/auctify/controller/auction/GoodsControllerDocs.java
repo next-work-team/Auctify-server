@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.example.auctify.dto.Goods.*;
 import org.example.auctify.dto.bid.BidHistoryResponseDTO;
+import org.example.auctify.dto.bid.BidSummaryDTO;
 import org.example.auctify.dto.response.ApiResponseDTO;
 import org.example.auctify.dto.social.CustomOauth2User;
 import org.springframework.data.domain.Page;
@@ -57,6 +58,10 @@ public interface GoodsControllerDocs {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     );
+
+    @Operation(summary = "상품 최근 입찰내역 15개", description = "최근 입찰내역 size개만큼(기본 15)  반환하여 준다.")
+    ResponseEntity<ApiResponseDTO<List<BidSummaryDTO>>> getGoodsBidList(@RequestParam Long goodsId, @RequestParam(defaultValue = "15")Long size);
+
 
     // 매너 온도 평가 가능 + 후기
     @Operation(summary = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있음.", description = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있습니다.")

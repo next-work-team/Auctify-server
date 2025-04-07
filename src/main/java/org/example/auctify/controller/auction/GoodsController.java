@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.auctify.dto.Goods.*;
 import org.example.auctify.dto.bid.BidHistoryResponseDTO;
+import org.example.auctify.dto.bid.BidSummaryDTO;
 import org.example.auctify.dto.response.ApiResponseDTO;
 import org.example.auctify.dto.social.CustomOauth2User;
 import org.example.auctify.service.auction.GoodsService;
@@ -40,6 +41,7 @@ public class GoodsController implements GoodsControllerDocs {
 
 
     // 경매 물품 정보를 반환 (상세 조회)
+
     @GetMapping("/{goodsId}")
     public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> getGoods(
         @Parameter(description = "조회할 물품 ID", example = "1")
@@ -125,6 +127,19 @@ public class GoodsController implements GoodsControllerDocs {
             Page<GoodsResponseSummaryDTO> result =
                     goodsService.searchGoods(category, priceRangeLow, priceRangeHigh, goodsStatus,goodsProcessStatus,goodsName,sort,pageable);
             return ResponseEntity.ok(ApiResponseDTO.success(result));
+        } catch (Exception e) {
+            log.error("[LOG] Internal server error: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ApiResponseDTO.error(500, "Search Goods Error"));
+        }
+    }
+
+    // 경매 디테일에서 최근 경매 내역
+    @GetMapping("/bidSummary")
+    public ResponseEntity<ApiResponseDTO<List<BidSummaryDTO>>> getGoodsBidList( Long goodsId,Long size) {
+        try {
+            goodsService.getBidHistorySummary(goodsId, size);
+            return ResponseEntity.ok(ApiResponseDTO.success(goodsService.getBidHistorySummary(goodsId, size)));
         } catch (Exception e) {
             log.error("[LOG] Internal server error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
