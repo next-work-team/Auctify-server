@@ -7,7 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 public interface GoodsRepositoryCustom {
 
-    Page<GoodsEntity> searchGoods(
+    Page<GoodsResponseSummaryDTO> searchGoodsWithLikeStatus(
+            Long userId,
             String category,
             Double priceRangeLow,
             Double priceRangeHigh,

@@ -19,8 +19,9 @@ import java.util.List;
 public interface GoodsControllerDocs {
 
     // 경매 물품 정보를 반환 (상세 조회)
-    @Operation(summary = "물품 정보 반환", description = "경매 물품 정보 페이지 입니다.")
+    @Operation(summary = "물품 정보 반환", description = "경매 물품 정보 페이지 입니다. (최근 입찰내역은 /api/auction/bidSummary 호출)")
     ResponseEntity<ApiResponseDTO<GoodsResponseDTO>>getGoods(
+            @AuthenticationPrincipal  CustomOauth2User userDetails,
             @Parameter(description = "조회할 물품 ID", example = "1")
             @PathVariable("goodsId") Long goodsId);
 
@@ -48,6 +49,7 @@ public interface GoodsControllerDocs {
     // 사용자는 경매 리스트 조회 가능
     @Operation(summary = "물품 검색 결과창", description = "사용자가 물품을 검색하고, 페이지네이션으로 반환합니다.")
     ResponseEntity<ApiResponseDTO<Page<GoodsResponseSummaryDTO>>> searchGoods (
+            @AuthenticationPrincipal CustomOauth2User userDetails,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) Double priceRangeLow,
             @RequestParam(required = false) Double priceRangeHigh,
@@ -60,7 +62,8 @@ public interface GoodsControllerDocs {
     );
 
     @Operation(summary = "상품 최근 입찰내역 15개", description = "최근 입찰내역 size개만큼(기본 15)  반환하여 준다.")
-    ResponseEntity<ApiResponseDTO<List<BidSummaryDTO>>> getGoodsBidList(@RequestParam Long goodsId, @RequestParam(defaultValue = "15")Long size);
+    ResponseEntity<ApiResponseDTO<List<BidSummaryDTO>>> getGoodsBidList(
+            @RequestParam(required = true) Long goodsId, @RequestParam(defaultValue = "15")Long size);
 
 
     // 매너 온도 평가 가능 + 후기
@@ -86,10 +89,10 @@ public interface GoodsControllerDocs {
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
-    // 낙찰자가 실제 결제 후 정보를 등록하는 API
-    @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는 API")
-    ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
-            BidPurchaseRequestDTO bidPurchaseRequestDTO,
-            @AuthenticationPrincipal CustomOauth2User userDetails
-    );
+//    // 낙찰자가 실제 결제 후 정보를 등록하는 API
+//    @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는 API")
+//    ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
+//            BidPurchaseRequestDTO bidPurchaseRequestDTO,
+//            @AuthenticationPrincipal CustomOauth2User userDetails
+//    );
 }

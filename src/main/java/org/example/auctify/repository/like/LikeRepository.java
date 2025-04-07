@@ -27,4 +27,5 @@ public interface LikeRepository extends JpaRepository<LikeEntity, Long> {
     Optional<LikeEntity> findByUser_UserIdAndGoods_GoodsId(Long userId, Long goodsId);
 
 
+    boolean existsByUserUserIdAndGoodsGoodsId(Long userId, long goodsId);
 }

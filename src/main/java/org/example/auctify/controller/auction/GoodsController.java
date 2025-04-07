@@ -44,10 +44,14 @@ public class GoodsController implements GoodsControllerDocs {
 
     @GetMapping("/{goodsId}")
     public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> getGoods(
+            CustomOauth2User userDetails,
         @Parameter(description = "조회할 물품 ID", example = "1")
         @PathVariable("goodsId") Long goodsId) {
         try {
-            GoodsResponseDTO goodsResponseDTO = goodsService.searchGoodsId(goodsId);
+            // 로그인 여부에 따라 userId를 넘길지 결정
+            Long userId = (userDetails != null) ? userDetails.getUserId() : null;
+
+            GoodsResponseDTO goodsResponseDTO = goodsService.searchGoodsId(userId,goodsId);
             return ResponseEntity.ok(ApiResponseDTO.success(goodsResponseDTO));
         } catch (Exception e) {
             log.error("[LOG] Internal server error: {}", e.getMessage());
@@ -112,6 +116,7 @@ public class GoodsController implements GoodsControllerDocs {
     //Pageable 로 반환, 페이지 사이즈는 요청에 따라 변경 가능
     @GetMapping("/search")
     public ResponseEntity<ApiResponseDTO<Page<GoodsResponseSummaryDTO>>> searchGoods(
+            CustomOauth2User userDetails,
             String category,
             Double priceRangeLow,
             Double priceRangeHigh,
@@ -124,8 +129,11 @@ public class GoodsController implements GoodsControllerDocs {
     ) {
         try {
             Pageable pageable = PageRequest.of(page, size, Sort.by(sort).descending());
+            // 로그인 여부에 따라 userId를 넘길지 결정
+            Long userId = (userDetails != null) ? userDetails.getUserId() : null;
+
             Page<GoodsResponseSummaryDTO> result =
-                    goodsService.searchGoods(category, priceRangeLow, priceRangeHigh, goodsStatus,goodsProcessStatus,goodsName,sort,pageable);
+                    goodsService.searchGoods(userId, category, priceRangeLow, priceRangeHigh, goodsStatus,goodsProcessStatus,goodsName,sort,pageable);
             return ResponseEntity.ok(ApiResponseDTO.success(result));
         } catch (Exception e) {
             log.error("[LOG] Internal server error: {}", e.getMessage());
@@ -136,7 +144,7 @@ public class GoodsController implements GoodsControllerDocs {
 
     // 경매 디테일에서 최근 경매 내역
     @GetMapping("/bidSummary")
-    public ResponseEntity<ApiResponseDTO<List<BidSummaryDTO>>> getGoodsBidList( Long goodsId,Long size) {
+    public ResponseEntity<ApiResponseDTO<List<BidSummaryDTO>>> getGoodsBidList(Long goodsId,Long size) {
         try {
             goodsService.getBidHistorySummary(goodsId, size);
             return ResponseEntity.ok(ApiResponseDTO.success(goodsService.getBidHistorySummary(goodsId, size)));
@@ -201,14 +209,14 @@ public class GoodsController implements GoodsControllerDocs {
     }
 
     // 낙찰자가 실제 결제후 정보를 등록하는 API
-    @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는  API")
-    @PostMapping("/{goodsId}/{bidId}")
-    public ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
-            BidPurchaseRequestDTO bidPurchaseRequestDTO,
-            @AuthenticationPrincipal CustomOauth2User userDetails
-    ) {
-        return ResponseEntity.ok(null);
-    }
+//    @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는  API")
+//    @PostMapping("/{goodsId}/{bidId}")
+//    public ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
+//            BidPurchaseRequestDTO bidPurchaseRequestDTO,
+//            @AuthenticationPrincipal CustomOauth2User userDetails
+//    ) {
+//        return ResponseEntity.ok(null);
+//    }
 
     // swagger을 연결하는 API 실제 구현은 따로해야함
     @Operation(summary = "WebSocket 연결", description = "클라이언트와 서버 간 실시간 연결을 위한 WebSocket을 설정합니다." +
