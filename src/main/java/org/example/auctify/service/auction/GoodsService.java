@@ -45,9 +45,16 @@ public class GoodsService {
 
 
 
-    public GoodsResponseDTO searchGoodsId(long goodsId) {
+    public GoodsResponseDTO searchGoodsId(Long userId,long goodsId) {
         GoodsEntity goodsEntity = goodsRepository.findById(goodsId).orElseThrow(() ->
                 new IllegalArgumentException("Goods not found with ID: " + goodsId));
+
+        // 좋아요 여부 확인
+        boolean isLiked = false;
+        if (userId != null) {
+            isLiked = likeRepository.existsByUserUserIdAndGoodsGoodsId(userId, goodsId);
+        }
+
         return GoodsResponseDTO
                 .builder()
                 .goodsId(goodsEntity.getGoodsId())
@@ -62,6 +69,7 @@ public class GoodsService {
                 .category(goodsEntity.getCategory())
                 .currentBidPrice(goodsEntity.getCurrentBidPrice())
                 .imageUrls(goodsEntity.getImageUrls())
+                .isLiked(isLiked)
                 .build();
     }
 
@@ -188,6 +196,7 @@ public class GoodsService {
     }
 
     public Page<GoodsResponseSummaryDTO> searchGoods(
+            Long userId,
             String category,
             Double priceRangeLow,
             Double priceRangeHigh,
@@ -197,26 +206,10 @@ public class GoodsService {
             String sort,
             Pageable pageable) {
 
-        Page<GoodsEntity> goodsEntityPage = goodsRepository.searchGoods(category, priceRangeLow, priceRangeHigh, goodsStatus, goodsProcessStatus, goodsName, sort, pageable);
+        Page<GoodsResponseSummaryDTO> goodsPage = goodsRepository.searchGoodsWithLikeStatus(userId,category, priceRangeLow, priceRangeHigh, goodsStatus, goodsProcessStatus, goodsName, sort, pageable);
 
 
-        return goodsEntityPage.map(goodsEntity -> {
-
-            // 가장 높은 현재 입찰가
-            Long highestBidPrice = goodsEntity.getMaxBidPrice();
-
-            return GoodsResponseSummaryDTO.builder()
-                    .goodsId(goodsEntity.getGoodsId())
-                    .goodsName(goodsEntity.getGoodsName())
-                    .goodsProcessStatus(goodsEntity.getGoodsProcessStatus())
-                    .currentBidPrice(highestBidPrice)
-                    .imageUrls(goodsEntity.getFirstImage())
-                    .endTime(goodsEntity.getActionEndTime())
-                    .goodsStatus(goodsEntity.getGoodsStatus())
-                    .category(goodsEntity.getCategory())
-                    .currentBidCount((long) goodsEntity.getBidHistories().size())
-                    .build();
-        });
+        return goodsPage;
     }
 
     public List<BidSummaryDTO> getBidHistorySummary(Long goodsId, Long size) {

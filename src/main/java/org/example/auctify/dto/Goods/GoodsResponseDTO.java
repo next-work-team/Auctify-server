@@ -43,11 +43,10 @@ public class GoodsResponseDTO {
     @Schema(description = "현재입찰가 입니다.")
     private Long currentBidPrice;
 
-
-
-
     @Schema(description = "포함된 상품 사진들입니다.")
     private List<String> imageUrls;
+
+    private Boolean isLiked;
 
     //실시간 남은 시간 계산용
     @JsonIgnore

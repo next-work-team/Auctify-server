@@ -41,7 +41,7 @@ public class GoodsResponseSummaryDTO {
     @Schema(description = "현재 입찰 수")
     private Long currentBidCount;
 
-
-
+    @Schema(description = "좋아요 여부")
+    private Boolean isLiked;
 
 }
