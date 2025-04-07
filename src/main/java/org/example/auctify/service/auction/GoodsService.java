@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.example.auctify.dto.Goods.*;
 import org.example.auctify.dto.bid.BidHistoryResponseDTO;
+import org.example.auctify.dto.bid.BidSummaryDTO;
 import org.example.auctify.entity.Goods.GoodsEntity;
 import org.example.auctify.entity.Goods.GoodsImageEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
@@ -20,6 +21,7 @@ import org.example.auctify.repository.payment.PaymentRepository;
 import org.example.auctify.repository.review.ReviewRepository;
 import org.example.auctify.repository.user.UserRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -215,9 +217,12 @@ public class GoodsService {
                     .currentBidCount((long) goodsEntity.getBidHistories().size())
                     .build();
         });
-
     }
 
+    public List<BidSummaryDTO> getBidHistorySummary(Long goodsId, Long size) {
+        Pageable pageable = PageRequest.of(0, size.intValue()); // size만큼 limit
+        return goodsRepository.findTopBidHistoryByGoodsId(goodsId, pageable);
+    }
 
 
     public ReviewDetailResponseDTO createReview(Long userId, ReviewRequestDTO reviewRequestDTO) {
