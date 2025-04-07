@@ -1,6 +1,7 @@
 package org.example.auctify.repository.goods;
 
 import com.querydsl.core.BooleanBuilder;
+import com.querydsl.core.types.Expression;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
@@ -15,6 +16,7 @@ import org.example.auctify.dto.Goods.GoodsProcessStatus;
 import org.example.auctify.dto.Goods.GoodsResponseSummaryDTO;
 import org.example.auctify.dto.Goods.GoodsStatus;
 import org.example.auctify.entity.Goods.QGoodsEntity;
+import org.example.auctify.entity.Goods.QGoodsImageEntity;
 import org.example.auctify.entity.bidHistory.QBidHistoryEntity;
 import org.example.auctify.entity.like.QLikeEntity;
 import org.springframework.data.domain.Page;
@@ -48,6 +50,15 @@ public class GoodsRepositoryCustomImpl implements GoodsRepositoryCustom {
         QGoodsEntity goods = QGoodsEntity.goodsEntity;
         QBidHistoryEntity bid = QBidHistoryEntity.bidHistoryEntity;
         QLikeEntity like = QLikeEntity.likeEntity;
+
+        QGoodsImageEntity image = QGoodsImageEntity.goodsImageEntity;
+
+        Expression<String> firstImage = JPAExpressions
+                .select(image.imageSrc)
+                .from(image)
+                .where(image.goods.goodsId.eq(goods.goodsId))
+                .orderBy(image.imageId.asc()) // 혹은 createdAt.asc()
+                .limit(1);
 
         BooleanBuilder builder = new BooleanBuilder(); // 동적 where 조건 빌더
 
@@ -92,8 +103,8 @@ public class GoodsRepositoryCustomImpl implements GoodsRepositoryCustom {
                                 // 현재 입찰가 계산 (최고 입찰가 vs 시작가 중 큰 값)
                                 currentBidPriceExpr(goods, bid).as("currentBidPrice"),
 
-                                // 첫 번째 이미지 경로
-                                goods.image.get(0).imageSrc.as("imageUrls"),
+//                                // 첫 번째 이미지 경로
+                                ExpressionUtils.as(firstImage, "imageUrls"),
 
                                 // 경매 종료 시간
                                 goods.actionEndTime.as("endTime"),
@@ -165,14 +176,17 @@ public class GoodsRepositoryCustomImpl implements GoodsRepositoryCustom {
      * - 입찰이 없을 경우: 시작가(minimumBidAmount)
      */
     private NumberExpression<Long> currentBidPriceExpr(QGoodsEntity goods, QBidHistoryEntity bid) {
-        // 서브쿼리로 최고 입찰가 조회 (없으면 0)
+        // max 입찰가 (null이면 0으로 처리), NumberExpression으로 변환
         NumberExpression<Long> maxBidPrice = Expressions.numberTemplate(Long.class,
-                "coalesce((select max(b.bid_price) from bid_history b where b.goods_id = {0}), 0)",
-                goods.goodsId);
+                "(select coalesce(max(b.bidPrice), 0) from BidHistoryEntity b where b.goods.goodsId = {0})",
+                goods.goodsId
+        );
 
-        // 시작가와 비교하여 더 큰 값 반환
+        // maxBidPrice vs minimumBidAmount 비교
         return new CaseBuilder()
                 .when(maxBidPrice.gt(goods.minimumBidAmount)).then(maxBidPrice)
                 .otherwise(goods.minimumBidAmount);
     }
+
+
 }
