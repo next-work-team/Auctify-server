@@ -44,7 +44,12 @@ public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsR
             Pageable pageable
     );
 
-
+    @EntityGraph(attributePaths = {
+            "bidHistories"})
+    @Query("SELECT g FROM GoodsEntity g " +
+            "WHERE g.goodsProcessStatus = org.example.auctify.dto.Goods.GoodsProcessStatus.BIDDING " +
+            "AND g.actionEndTime < CURRENT_TIMESTAMP")
+    List<GoodsEntity> findExpiredBiddingGoods();
 
 
 
