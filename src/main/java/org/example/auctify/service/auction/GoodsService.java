@@ -285,6 +285,60 @@ public class GoodsService {
     }
 
 
+    // 경매시간 초과후 그에 따른 메서드 로직 처리.
+    // 경우 2가지 유찰 낙찰
+    // 낙찰시 낙찰 알람이 가야함.
+    //
+    public void processExpiredAuctions(){
+        System.out.println("processExpiredAuctions 메서드가 실행됐습니다.");
+        log.info("경매 종료 처리 시작");
+
+
+        // 경매 진행상태이면서 경매시간이 지난! 상품들을 찾는다.
+        List<GoodsEntity> expiredGoodsList = goodsRepository.findExpiredBiddingGoods();
+
+        for (GoodsEntity goods : expiredGoodsList) {
+
+            //
+            List<BidHistoryEntity> bids = goods.getBidHistories();
+            List<BidHistoryEntity> validBids = bids.stream()
+                    .filter(b -> !Boolean.TRUE.equals(b.getCancelFlag()))
+                    .toList();
+
+            if (!validBids.isEmpty()) {
+                //낙찰시 낙찰처리 -> 낙찰받은 유저에게 알람들 전송한다. + 채팅방이 생성된다.
+
+                // 낙찰처리
+                log.info("낙찰 처리 - goodsId: {}", goods.getGoodsId());
+                goods.onChangeProcessStatus(GoodsProcessStatus.AWARDED);
+
+                //Todo
+                // 데이터 N + 1문제 해결을 위해 다시  경매와 입찰 내역 함께 조회
+
+
+                //Todo
+                // 알림/채팅방 생성 등 추가 로직
+                // 가장 높은 입찰자 선정
+                UserEntity awardedUser = goods.getAwardedUser(); // 내부에서 유효한 입찰만 고려하게 할 수도 있음
+                // 경매물품 등록 유저
+                UserEntity GoodsUser = goods.getUser();
+
+
+
+            } else {
+                // 유찰처리
+                log.info("유찰 처리 - goodsId: {}", goods.getGoodsId());
+                goods.onChangeProcessStatus(GoodsProcessStatus.FAILED);
+
+                //Todo
+                // 판매자에게 유찰 알림 등 추가 로직
+                UserEntity GoodsUser = goods.getUser();
+
+            }
+        }
+    }
+
+
 
 
 

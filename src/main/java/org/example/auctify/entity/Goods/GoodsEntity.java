@@ -14,6 +14,7 @@ import org.example.auctify.entity.like.LikeEntity;
 import org.example.auctify.entity.user.UserEntity;
 import com.querydsl.core.types.dsl.CaseBuilder;
 import com.querydsl.core.types.dsl.NumberExpression;
+import org.springframework.security.core.userdetails.User;
 
 
 import java.time.LocalDateTime;
@@ -135,6 +136,21 @@ public class GoodsEntity extends BaseTimeEntity {
                 .collect(Collectors.toList());
     }
 
+    public void onChangeProcessStatus(GoodsProcessStatus newStatus) {
+        if (newStatus == null) {
+            throw new IllegalArgumentException("GoodsProcessStatus는 null일 수 없습니다.");
+        }
+        this.goodsProcessStatus = newStatus;
+    }
+
+    // 낙찰된 유저를 반환하는 메소드
+    public UserEntity getAwardedUser() {
+        return bidHistories.stream()
+                .filter(b -> !Boolean.TRUE.equals(b.getCancelFlag())) // 취소된 입찰 제외
+                .max((a, b) -> Long.compare(a.getBidPrice(), b.getBidPrice())) // 최고가 입찰
+                .map(BidHistoryEntity::getUser) // 해당 입찰의 유저 반환
+                .orElse(null); // 없을 경우 null
+    }
 
 
 }
