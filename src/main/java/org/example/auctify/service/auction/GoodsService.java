@@ -140,6 +140,10 @@ public class GoodsService {
         GoodsEntity goods = goodsRepository.findGoodsImageBidHistoryByGoodsId(bidRequestDTO.getGoodsId()).orElseThrow(() ->
                 new IllegalArgumentException("Goods not found with ID: " + bidRequestDTO.getGoodsId()));
 
+        if (!goods.checkCanBid()){
+            throw new IllegalArgumentException("Can't Bid Goods ID : " + bidRequestDTO.getGoodsId());
+        }
+
         // 만약에
         BidHistoryEntity bidHistory = BidHistoryEntity.builder()
                 .bidStatus(false)
