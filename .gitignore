@@ -66,3 +66,4 @@ buildOutputCleanup.lock
 
 *.lock
 
+src/main/resources/mongod.conf
