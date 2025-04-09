@@ -152,5 +152,12 @@ public class GoodsEntity extends BaseTimeEntity {
                 .orElse(null); // 없을 경우 null
     }
 
+    // 입찰 가능 상태면 true 반환
+    public boolean checkCanBid() {
+        return this.goodsProcessStatus == GoodsProcessStatus.BIDDING // 현재 경매가 진행 중인지 확인
+                && this.actionEndTime.isAfter(LocalDateTime.now()); //아직 경매 시간이 남아 있는지 확인
+    }
+
+
 
 }
