@@ -41,8 +41,8 @@ jobs:
       - name: 도커파일
         run: cat .gitignore | grep -i dockerfile
 
-      - name: Docker 이미지를 생성
-        run: docker build -t auctify-server .
+#      - name: Docker 이미지를 생성
+#        run: docker build -t auctify-server .
 
       - name: Docker 이미지에 Tag 붙이기
         run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
