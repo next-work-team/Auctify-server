@@ -83,10 +83,12 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/oauth2/**", "/login/oauth2/**", "/favicon.ico", "/presigned", "123",
                         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/auth/**","/api/pay/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "api/user/{userId}").permitAll()
-                .requestMatchers(HttpMethod.GET, "api/auction/{goodsId}").permitAll()
-                .requestMatchers(HttpMethod.GET, "api/auction/search").permitAll()
-                .requestMatchers(HttpMethod.GET, "api/auction/bidSummary").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/user/{userId}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auction/{goodsId}").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auction/search").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/auction/bidSummary").permitAll()
+                .requestMatchers("/api/**").hasRole("USER")
+                //.requestMatchers(HttpMethod.GET, "/api/user").hasRole("USER")
 
 
                 .requestMatchers("/my").hasRole("USER")  // '/my' 경로는 USER 권한 필요
