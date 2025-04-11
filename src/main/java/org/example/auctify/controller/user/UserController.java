@@ -36,9 +36,11 @@ public class UserController implements UserControllerDocs{
 
     private final UserRepository userRepository;
     @Override
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<ApiResponseDTO<UserInfoResponseDTO>> getMyProfile(CustomOauth2User userDetails) {
         try {
+            log.error("[LOG] 마이프로필: {}");
+
             UserInfoResponseDTO  userProfile = userService.getProfile(userDetails.getUserId());
             return ResponseEntity.ok(ApiResponseDTO.success(userProfile));
         } catch (Exception e) {

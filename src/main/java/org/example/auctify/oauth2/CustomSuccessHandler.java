@@ -54,7 +54,9 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // JWT 토큰 생성 (24일간 유효)
         String token = jwtUtil.createJwt(userId, name, oauthId, role, 60 * 60 * 1000L * 24 * 24);
-
+        if (role.startsWith("ROLE_")) {
+            role = role.replace("ROLE_", ""); // 👉 USER 로 바꾸기
+        }
         // 쿠키 생성 및 설정 (JWT 포함)
         response.addCookie(createCookie("Authorization", token, request));
 

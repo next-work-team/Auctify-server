@@ -69,7 +69,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     .oauthId(oauthId) // 식별하는 값
                     .email(oAuth2Response.getEmail())
                     .nickName(oAuth2Response.getName())
-                    .role(Role.ROLE_USER)
+                    .role(Role.USER)
                     .build();
             userEntity = userRepository.save(userEntity);
             userDTO = new UserDTO();
@@ -77,7 +77,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             System.out.println("userEntity.getUserId() 새로 저장함"+ userEntity.getUserId());
             userDTO.setOauthId(oauthId);;
             userDTO.setName(oAuth2Response.getName());
-            userDTO.setRole(Role.ROLE_USER);
+            userDTO.setRole(Role.USER);
 
         } else {
 
@@ -90,7 +90,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
             userDTO = new UserDTO();
             userDTO.setOauthId(existData.getOauthId());
             userDTO.setName(existData.getNickName());
-            userDTO.setRole(Role.ROLE_USER);
+            userDTO.setRole(Role.USER);
             userDTO.setUserId(existData.getUserId());
             System.out.println("existData.getUserId() 기존에꺼 가져옴 저장함"+ existData.getUserId());
 
