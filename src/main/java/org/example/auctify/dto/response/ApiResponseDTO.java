@@ -17,6 +17,6 @@ public class ApiResponseDTO<T> {
     }
 
     public static <T> ApiResponseDTO<T> error(int status, String message) {
-        return new ApiResponseDTO<>(status, message, null);
+        return new ApiResponseDTO<>(status, message + "RETURN : ERROR", null);
     }
 }
