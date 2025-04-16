@@ -20,7 +20,7 @@ public class CorsMvcConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry corsRegistry) {
         corsRegistry.addMapping("/**")  // 모든 URL 패턴에 대해 CORS를 적용
-                .allowedOrigins("http://localhost:3000", "https://www.auctify.shop")
+                .allowedOrigins("https://localhost:3000", "https://www.auctify.shop")
                 .allowedMethods("*")  // 모든 HTTP 메서드(GET, POST, PUT, DELETE 등)를 허용
                 .allowedHeaders("*")  // 모든 헤더를 허용
                 .allowCredentials(true)  // 쿠키 전송 허용 (특정 도메인 지정 시에만 true로 설정 가능)

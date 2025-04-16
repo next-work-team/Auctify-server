@@ -34,7 +34,8 @@ public interface UserControllerDocs {
 
     @Operation(summary = "프로필 변경", description = "프로필 사진과 닉네임을 변경하는 API " +
             "주소는 이미 저장된 주소중 기본 주소를 정하는 거다.")
-    ResponseEntity<ApiResponseDTO<UserChangedProfileResponseDTO>> changeProfile(@Validated UserInfoRequestDTO profile, BindingResult bindingResult, @AuthenticationPrincipal CustomOauth2User userDetails);
+    ResponseEntity<ApiResponseDTO<UserChangedProfileResponseDTO>> changeProfile(
+            @RequestBody @Validated UserInfoRequestDTO profile, BindingResult bindingResult, @AuthenticationPrincipal CustomOauth2User userDetails);
 
 
     @Operation(summary = "토탈 거래 후기 확인", description = "입찰 혹은 낙찰로 받은 거래후기들을 확인 할 수 있는 API" +
