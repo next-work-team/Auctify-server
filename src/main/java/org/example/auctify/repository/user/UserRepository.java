@@ -17,7 +17,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query("select u from UserEntity u left join fetch u.address where u.userId = :userId")
     Optional<UserEntity> findByIdWithAddresses(@Param("userId") Long userId);
 
+    @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.nickName = :nickname AND u.userId <> :userId")
+    long countByNickNameExcludingUserId(@Param("nickname") String nickname, @Param("userId") Long userId);
+    @Query("SELECT COUNT(u) FROM UserEntity u WHERE u.email = :email AND u.userId <> :userId")
+    long countByEmailExcludingUserId(@Param("email") String email, @Param("userId") Long userId);
+
     long countByNickName(String nickname);
+
     long countByEmail(String email);
 
 

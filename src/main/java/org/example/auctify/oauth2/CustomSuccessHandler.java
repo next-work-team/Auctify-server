@@ -68,7 +68,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         String targetUrl;
 
         if (serverName.contains("localhost")) {
-            targetUrl = "http://localhost:8080/my";
+            targetUrl = "https://localhost:3000/";
         } else {
             targetUrl = "https://www.auctify.shop";
         }

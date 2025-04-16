@@ -26,6 +26,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import java.util.Comparator;
 import java.util.List;
@@ -76,8 +77,19 @@ public class UserService {
         user.onChangeBirthday(userInfoRequestDTO.getBirthdate());
         user.onChangeEmail(userInfoRequestDTO.getEmail());
 
-        if(userInfoRequestDTO.getAddressDTO() != null)
+
+        System.out.println(userInfoRequestDTO.getProfileImage());
+        System.out.println(userInfoRequestDTO.getNickname());
+        System.out.println(userInfoRequestDTO.getBirthdate());
+        System.out.println(userInfoRequestDTO.getEmail());
+
+
+        AddressDTO addressDTO = userInfoRequestDTO.getAddressDTO();
+
+        if(addressDTO != null && addressDTO.getAddressId() != null && addressDTO.getAddressId() != 0)
             user.onChangeDefaultAddress(userInfoRequestDTO.getAddressDTO().getAddressId());
+
+        log.info("트랜잭션 활성 여부: {}", TransactionSynchronizationManager.isActualTransactionActive());
 
 
         return UserChangedProfileResponseDTO.builder()
@@ -86,7 +98,8 @@ public class UserService {
                 .profileImage(user.getImage())
                 .email(user.getEmail())
                 .birthdate(user.getBirthday() != null ? user.getBirthday().toString() : null)
-                .addressDTO(userInfoRequestDTO.getAddressDTO())
+                .addressDTO(addressDTO != null && addressDTO.getAddressId() != null && addressDTO.getAddressId() != 0 ?
+                        AddressDTO.changeDTO(user.getDefaultAddress()) : null)
                 .build();
     }
 

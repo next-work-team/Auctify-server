@@ -112,5 +112,12 @@ public class UserEntity extends BaseTimeEntity {
         return averageTemperature;
     }
 
+    public AddressEntity getDefaultAddress(){
+        return address.stream()
+                .filter(add -> add.getDefaultAddress())
+                .findFirst()
+                .orElse(new AddressEntity());
+    }
+
 
 }
