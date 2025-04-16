@@ -10,6 +10,7 @@ import org.example.auctify.dto.bid.BidSummaryDTO;
 import org.example.auctify.dto.response.ApiResponseDTO;
 import org.example.auctify.dto.social.CustomOauth2User;
 import org.example.auctify.service.auction.GoodsService;
+import org.example.auctify.service.notification.NotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,6 +38,7 @@ public class GoodsController implements GoodsControllerDocs {
 
 
     private final GoodsService goodsService;
+    private final NotificationService notificationService;
 
 
 
@@ -86,6 +88,11 @@ public class GoodsController implements GoodsControllerDocs {
         try {
             Long userId = userDetails.getUserId();
             BidHistoryResponseDTO bidHistoryResponseDTO = goodsService.bidAuctionGoods(userId, bidRequestDTO);
+
+            //입찰 알림
+            notificationService.notifyBid(bidHistoryResponseDTO.getGoodsId());
+            notificationService.sendBidUpdate(bidHistoryResponseDTO.getGoodsId());
+
             return ResponseEntity.ok(ApiResponseDTO.success(bidHistoryResponseDTO));
         } catch (Exception e) {
             log.error("[LOG] Internal server error: {}", e.getMessage());

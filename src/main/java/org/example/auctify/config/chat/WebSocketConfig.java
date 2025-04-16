@@ -1,20 +1,24 @@
 package org.example.auctify.config.chat;
 
 import lombok.RequiredArgsConstructor;
+import org.example.auctify.service.chat.UserSessionService;
 import org.example.auctify.util.websocket.StompHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 
 @Configuration
 @EnableWebSocketMessageBroker // Stomp를 사용하기 위한
 @RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	private final StompHandler stompHandler;
+	private final UserSessionService userSessionService;
 
 
 	@Override
@@ -34,5 +38,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 	@Override
 	public void configureClientInboundChannel(ChannelRegistration registration) {
 		registration.interceptors(stompHandler);
+	}
+
+	@EventListener
+	public void handleWebSocketDisconnect(SessionDisconnectEvent event) {
+		String userId = event.getUser() != null ? event.getUser().getName() : null;
+		if (userId != null) {
+			userSessionService.leaveChatRoom(Long.parseLong(userId));
+		}
 	}
 }

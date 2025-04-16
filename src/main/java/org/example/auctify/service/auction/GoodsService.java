@@ -20,6 +20,7 @@ import org.example.auctify.repository.like.LikeRepository;
 import org.example.auctify.repository.payment.PaymentRepository;
 import org.example.auctify.repository.review.ReviewRepository;
 import org.example.auctify.repository.user.UserRepository;
+import org.example.auctify.service.notification.NotificationService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -41,8 +42,7 @@ public class GoodsService {
     private final LikeRepository likeRepository;
     private final ReviewRepository reviewRepository;
     private final PaymentRepository paymentRepository;
-
-
+    private final NotificationService notificationService;
 
 
     public GoodsResponseDTO searchGoodsId(Long userId,long goodsId) {
@@ -327,7 +327,9 @@ public class GoodsService {
                 // 경매물품 등록 유저
                 UserEntity GoodsUser = goods.getUser();
 
-
+                //낙찰 성공/실패 알림 전송
+                notificationService.notifySuccessfulBid(goods.getGoodsId());
+                notificationService.notifyFailBid(goods.getGoodsId());
 
             } else {
                 // 유찰처리
