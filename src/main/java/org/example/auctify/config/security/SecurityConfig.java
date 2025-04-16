@@ -48,7 +48,7 @@ public class SecurityConfig {
         http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(Arrays.asList(
-                    "http://localhost:3000",
+                    "https://localhost:3000",
                     "https://www.auctify.shop"
             ));
             configuration.setAllowedMethods(Collections.singletonList("*"));

@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -66,15 +67,17 @@ public class UserController implements UserControllerDocs{
 
 
     @Override
-    @PutMapping("/")
+    @PutMapping("")
     public ResponseEntity<ApiResponseDTO<UserChangedProfileResponseDTO>> changeProfile(
             UserInfoRequestDTO userInfoDTO,
             BindingResult bindingResult,
             CustomOauth2User userDetails) {
         try {
 
-            long countByNickname = userRepository.countByEmail(userInfoDTO.getNickname());
-            long countByEmail= userRepository.countByEmail(userInfoDTO.getEmail());
+            Long id =  userDetails.getUserId();
+
+            long countByNickname = userRepository.countByNickNameExcludingUserId( userInfoDTO.getNickname(), id);
+            long countByEmail= userRepository.countByEmailExcludingUserId(userInfoDTO.getEmail(), id);
 
             if (countByNickname > 0) {
                 throw new Exception("닉네임이 중복됩니다.");
@@ -86,7 +89,7 @@ public class UserController implements UserControllerDocs{
 
 
             UserChangedProfileResponseDTO userChangedProfileResponseDTO
-                    = userService.changeProfile(userDetails.getUserId(), userInfoDTO);
+                    = userService.changeProfile(id, userInfoDTO);
             return ResponseEntity.ok(ApiResponseDTO.success(userChangedProfileResponseDTO));
         }catch (Exception e){
             log.error("[LOG]: {}", e.getMessage());
