@@ -51,6 +51,8 @@ public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsR
             "AND g.actionEndTime < CURRENT_TIMESTAMP")
     List<GoodsEntity> findExpiredBiddingGoods();
 
-
-
+    @Query("SELECT g FROM GoodsEntity g " +
+            "WHERE g.goodsProcessStatus = org.example.auctify.dto.Goods.GoodsProcessStatus.BIDDING " +
+            "AND g.actionEndTime - CURRENT_TIMESTAMP = 1")
+    List<GoodsEntity> findDeadlineBiddingGoods();
 }

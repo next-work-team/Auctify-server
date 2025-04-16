@@ -1,7 +1,11 @@
 package org.example.auctify.repository.bidHistory;
 
+import java.util.List;
+import java.util.Optional;
 import org.example.auctify.dto.bid.BidHistoryResponseDTO;
+import org.example.auctify.entity.Goods.GoodsEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
+import org.example.auctify.entity.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -30,5 +34,9 @@ public interface BidHistoryRepository extends JpaRepository<BidHistoryEntity, Lo
     """)
     Page<BidHistoryEntity> findBidHistoryByUserId(@Param("userId") Long userId, Pageable pageable);
 
+    Optional<BidHistoryEntity> findFirstByGoodsOrderByCreatedAt(GoodsEntity goods);
 
+    Optional<BidHistoryEntity> findByGoodsAndBidStatus(GoodsEntity goods, Boolean BidStatus);
+
+    List<BidHistoryEntity> findByGoods(GoodsEntity goods);
 }
