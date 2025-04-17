@@ -110,7 +110,7 @@ public class GoodsService {
         }
 
         // Goods 엔티티에 이미지 설정
-        goodsEntity.getImage().addAll(goodsImages);
+        goodsEntity.getImages().addAll(goodsImages);
 
         // 4. 응답 DTO 생성
         return GoodsResponseDTO

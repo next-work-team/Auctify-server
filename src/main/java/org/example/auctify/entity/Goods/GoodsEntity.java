@@ -98,13 +98,13 @@ public class GoodsEntity extends BaseTimeEntity {
     @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     @JsonIgnore
-    private List<GoodsImageEntity> image = new ArrayList<GoodsImageEntity>();
+    private List<GoodsImageEntity> images = new ArrayList<GoodsImageEntity>();
 
 
     public String getFirstImage(){
         String firstImage = "";
-        if (!Objects.isNull(image) && !image.isEmpty()) {
-            firstImage = image.get(0).getImageSrc();
+        if (!Objects.isNull(images) && !images.isEmpty()) {
+            firstImage = images.get(0).getImageSrc();
         }
         return firstImage;
     }
@@ -127,11 +127,11 @@ public class GoodsEntity extends BaseTimeEntity {
 
 
     public List<String> getImageUrls() {
-        if (image == null || image.isEmpty()) {
+        if (images == null || images.isEmpty()) {
             return Collections.emptyList(); // 빈 리스트 반환 권장 (null보다는 빈 리스트)
         }
 
-        return image.stream()
+        return images.stream()
                 .map(img -> img.getImageSrc())
                 .collect(Collectors.toList());
     }
