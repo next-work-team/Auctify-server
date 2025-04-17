@@ -2,10 +2,8 @@ package org.example.auctify.controller.user;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.example.auctify.dto.Goods.AuctionResponseGoodsDTO;
 import org.example.auctify.dto.Goods.GoodsResponseSummaryDTO;
 import org.example.auctify.dto.Goods.ReviewDetailResponseDTO;
-import org.example.auctify.dto.Goods.GoodsResponseDTO;
 import org.example.auctify.dto.bid.BidHistoryResponseDTO;
 import org.example.auctify.dto.duplication.DuplicationDTO;
 import org.example.auctify.dto.like.LikeGoodsResponseDTO;
@@ -18,7 +16,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
