@@ -50,13 +50,9 @@ jobs:
         #        run: docker build -t auctify-server .
       - name: Docker 이미지에 Tag 붙이기
         run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
-
-      - name: ECR에 Docker 이미지 Push
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
-
-      - name: EC2의 SSH 포트 222 접근 가능 여부 확인
+      - name: EC2의 SSH 포트 22 접근 가능 여부 확인
         run: |
-          nc -zv ${{ secrets.EC2_HOST }} 222 || echo "❌ 포트 접근 불가"
+          nc -zv ${{ secrets.EC2_HOST }} 22 || echo "❌ 포트 접근 불가"
       - name: 컨테이너 로그 출력 (에러 디버깅용)
         run: docker logs auctify_server || echo "컨테이너가 아직 안 떠 있음"
       - name: SSH로 EC2에  접속하기
@@ -65,10 +61,15 @@ jobs:
           host: ${{ secrets.EC2_HOST}}
           username: ${{ secrets.EC2_USERNAME}}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: 222  # 여기에 추가
+          port: 22  # 여기에 추가
           script_stop: true
           script: |
             docker stop auctify_server || true
             docker rm auctify_server || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
+            echo "✅ Docker 컨테이너 실행"
             docker run -d --name auctify_server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
+            echo "✅ 컨테이너 상태 확인"
+            docker ps -a
+            echo "✅ 컨테이너 로그 출력"
+            docker logs auctify_server || echo "컨테이너 로그 없음"
