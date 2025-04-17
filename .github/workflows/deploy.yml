@@ -60,6 +60,7 @@ jobs:
           host: ${{ secrets.EC2_HOST}}
           username: ${{ secrets.EC2_USERNAME}}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 22  # 여기에 추가
           script_stop: true
           script: |
             docker stop auctify_server || true
