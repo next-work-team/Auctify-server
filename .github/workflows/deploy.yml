@@ -52,7 +52,7 @@ jobs:
         run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
       - name: EC2의 SSH 포트 22 접근 가능 여부 확인
         run: |
-          nc -zv ${{ secrets.EC2_HOST }} 22 || echo "❌ 포트 접근 불가"
+          nc -zv ${{ secrets.EC2_HOST }} 22 || echo "❌ 포트 접근 불가 "
       - name: 컨테이너 로그 출력 (에러 디버깅용)
         run: docker logs auctify_server || echo "컨테이너가 아직 안 떠 있음"
       - name: SSH로 EC2에  접속하기
