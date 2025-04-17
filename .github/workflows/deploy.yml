@@ -57,14 +57,15 @@ jobs:
       - name: EC2의 SSH 포트 222 접근 가능 여부 확인
         run: |
           nc -zv ${{ secrets.EC2_HOST }} 222 || echo "❌ 포트 접근 불가"
-
+      - name: 컨테이너 로그 출력 (에러 디버깅용)
+        run: docker logs auctify_server || echo "컨테이너가 아직 안 떠 있음"
       - name: SSH로 EC2에  접속하기
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST}}
           username: ${{ secrets.EC2_USERNAME}}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
-          port: 222  # 여기에 추가
+          port: 22  # 여기에 추가
           script_stop: true
           script: |
             docker stop auctify_server || true
