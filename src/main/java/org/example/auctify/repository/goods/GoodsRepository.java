@@ -20,7 +20,6 @@ public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsR
     // EntityGraph 사용 필수
     @EntityGraph(attributePaths = {
             "user"
-            ,"image"
             ,"bidHistories"})
     @Query("SELECT g FROM GoodsEntity g WHERE g.user.userId = :userId" +
             " Order BY g.goodsId DESC")

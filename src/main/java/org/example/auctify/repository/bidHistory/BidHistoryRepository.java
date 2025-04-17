@@ -21,14 +21,13 @@ public interface BidHistoryRepository extends JpaRepository<BidHistoryEntity, Lo
     // EntityGraph 사용 필수
     @EntityGraph(attributePaths = {
             "goods",
-            "goods.image",
             "goods.bidHistories"
     })
     @Query("""
     SELECT b
     FROM BidHistoryEntity b
     JOIN FETCH b.goods g
-    LEFT JOIN FETCH g.image gi
+    LEFT JOIN FETCH g.images gi
     WHERE b.user.userId = :userId
     ORDER BY b.bidHistoryId DESC
     """)
