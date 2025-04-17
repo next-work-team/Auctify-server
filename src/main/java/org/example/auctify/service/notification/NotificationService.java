@@ -1,6 +1,7 @@
 package org.example.auctify.service.notification;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +12,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.auctify.controller.notification.NotificationController;
 import org.example.auctify.dto.chat.MessageDto;
 import org.example.auctify.dto.notification.ChatNotificationDto;
+import org.example.auctify.dto.notification.NotificationListResDto;
 import org.example.auctify.dto.notification.NotificationType;
+import org.example.auctify.dto.social.CustomOauth2User;
 import org.example.auctify.entity.Goods.GoodsEntity;
 import org.example.auctify.entity.bidHistory.BidHistoryEntity;
 import org.example.auctify.entity.chat.ChatRoomEntity;
@@ -146,7 +149,7 @@ public class NotificationService {
 			try {
 				Map<String, String> eventData = new HashMap<>();
 				eventData.put("message", "낙찰에 성공했습니다.");
-				eventData.put("goods", goods.getGoodsName()); //낙찰 실패 상품
+				eventData.put("goods", goods.getGoodsName()); //낙찰 성공 상품
 				sseEmitter.send(SseEmitter.event().name("addSuccessfulBid").data(eventData));
 
 				// DB 저장
@@ -249,6 +252,15 @@ public class NotificationService {
 						eventData.put("goodsName", goods.getGoodsName()); //경매 상품 이름
 
 						sseEmitter.send(SseEmitter.event().name("DeadLine").data(eventData));
+
+						// DB 저장
+						NotificationEntity notification = NotificationEntity.builder()
+								.notificationType(NotificationType.DEADLINE)
+								.content(goods.getGoodsName())
+								.goods(goods)
+								.sender(goods.getUser())
+								.build();
+						notificationRepository.save(notification);
 					} catch (Exception e) {
 						NotificationController.sseEmitters.remove(userId);
 					}
@@ -257,7 +269,22 @@ public class NotificationService {
 		}
 	}
 
-	public void getNotifications() {
+	public List<NotificationListResDto> getNotifications(CustomOauth2User user) {
+		UserEntity findUser = userRepository.findById(user.getUserId())
+				.orElseThrow(() -> new NullPointerException("존재하지 않는 회원입니다."));
+		List<NotificationEntity> findNotificationList = notificationRepository.findBySenderAndNotificationTypeNot(
+				findUser, NotificationType.CHAT);
 
+		return findNotificationList.stream()
+				.map(notification -> NotificationListResDto.builder()
+						.id(notification.getId())
+						.notificationType(notification.getNotificationType())
+						.goodsName(notification.getContent())
+						.createdAt(notification.getCreatedAt())
+						.goodsId(notification.getGoods().getGoodsId())
+						.sender(notification.getSender().getNickName())
+						.price(notification.getGoods().getCurrentBidPrice())
+						.endTime(Duration.between(LocalDateTime.now(), notification.getGoods().getActionEndTime()))
+						.build()).toList();
 	}
 }
