@@ -225,14 +225,5 @@ public class GoodsController implements GoodsControllerDocs {
 //        return ResponseEntity.ok(null);
 //    }
 
-    // swagger을 연결하는 API 실제 구현은 따로해야함
-    @Operation(summary = "WebSocket 연결", description = "클라이언트와 서버 간 실시간 연결을 위한 WebSocket을 설정합니다." +
-            "실제로는 따로 구현해야함 추후에 삭제 예정 (swagger를 위해서 작성함)")
-    @GetMapping("/ws/connect")
-    public String connectWebSocket() {
-        // WebSocket 연결에 대한 로직은 Spring WebSocket 또는 다른 기술로 처리합니다.
-        return "WebSocket 연결 성공! 클라이언트와 서버가 실시간 통신을 시작합니다.";
-    }
-
 
 }
