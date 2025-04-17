@@ -85,8 +85,8 @@ public class GoodsService {
                 .goodsName(goodsRequestDTO.getGoodsName())
                 .goodsDescription(goodsRequestDTO.getGoodsDescription())
                 .buyNowPrice(goodsRequestDTO.getBuyNowPrice())
-                .goodsStatus(GoodsStatus.valueOf(goodsRequestDTO.getGoodsProcessStatus()))
-                .goodsProcessStatus(GoodsProcessStatus.valueOf(goodsRequestDTO.getGoodsStatus()))
+                .goodsProcessStatus(GoodsProcessStatus.valueOf(goodsRequestDTO.getGoodsProcessStatus()))
+                .goodsStatus(GoodsStatus.valueOf(goodsRequestDTO.getGoodsStatus()))
                 .minimumBidAmount(goodsRequestDTO.getMinimumBidAmount())
                 .actionEndTime(goodsRequestDTO.getActionEndTime())
                 .user(user)
@@ -137,7 +137,7 @@ public class GoodsService {
                 new IllegalArgumentException("User not found with ID: " + userId));
 
         // 2. 입찰한 Goods 조회
-        GoodsEntity goods = goodsRepository.findGoodsImageBidHistoryByGoodsId(bidRequestDTO.getGoodsId()).orElseThrow(() ->
+        GoodsEntity goods = goodsRepository.findGoodsBidHistoryByGoodsId(bidRequestDTO.getGoodsId()).orElseThrow(() ->
                 new IllegalArgumentException("Goods not found with ID: " + bidRequestDTO.getGoodsId()));
 
         if (!goods.checkCanBid()){
@@ -181,7 +181,7 @@ public class GoodsService {
                 new IllegalArgumentException("Bid not found with ID: " + bidHistoryId));
 
         // 3. Goods 조회
-        GoodsEntity goods = goodsRepository.findGoodsImageBidHistoryByGoodsId(bidHistory.getGoods().getGoodsId()).orElseThrow(() ->
+        GoodsEntity goods = goodsRepository.findGoodsBidHistoryByGoodsId(bidHistory.getGoods().getGoodsId()).orElseThrow(() ->
                 new IllegalArgumentException("Goods not found with ID: " + bidHistory.getGoods().getGoodsId()));
 
         // 3. cancel상태로 바꿈
@@ -270,14 +270,16 @@ public class GoodsService {
 
         // 이미 좋아요 있으면 에러.
         boolean flag = likeRepository.findByUser_UserIdAndGoods_GoodsId(userId, goodsId).isPresent();
-        if (!flag) {
+        if (flag) {
             throw new RuntimeException("좋아요 엔티티가 없어야 합니다. 이미 좋아요 존재");
         }
 
-        LikeEntity.builder()
+        LikeEntity like  = LikeEntity.builder()
                 .goods(goods)
                 .user(user)
                 .build();
+        likeRepository.save(like); // 저장해야 실제 DB에 반영됨
+
         return;
     }
 

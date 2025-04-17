@@ -163,7 +163,7 @@ public class GoodsController implements GoodsControllerDocs {
     }
 
     //매너 온도 평가 가능 + 후기 구매자만 후기를 작성할 수 있다.
-    @PostMapping("/review/{goodsId}")
+    @PostMapping("/review")
     public ResponseEntity<ApiResponseDTO<ReviewDetailResponseDTO>> createReview(
             ReviewRequestDTO reviewRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
@@ -174,17 +174,19 @@ public class GoodsController implements GoodsControllerDocs {
 
             return ResponseEntity.ok(ApiResponseDTO.success(reviewDetailResponseDTO));
         } catch (Exception e) {
+            System.out.println(e.toString());
+            System.out.println(e.getCause());
+            System.out.println(e.getStackTrace());
             log.error("[LOG] Internal server error: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponseDTO.error(400, "create Review"));
         }
     }
 
-
+    // 좋아요
     @PostMapping("/liked/{goodsId}")
     public ResponseEntity<ApiResponseDTO<String>> createLike(
             Long goodsId,
-            LikeRequestDTO likeRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ) {
         try {
@@ -198,10 +200,10 @@ public class GoodsController implements GoodsControllerDocs {
         }
     }
 
+    // 좋아요 취소
     @DeleteMapping("/liked/{goodsId}")
     public ResponseEntity<ApiResponseDTO<String>> cancelLike(
             Long goodsId,
-            LikeRequestDTO likeRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     ) {
         try {

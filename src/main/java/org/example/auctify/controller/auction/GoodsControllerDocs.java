@@ -69,23 +69,21 @@ public interface GoodsControllerDocs {
     // 매너 온도 평가 가능 + 후기
     @Operation(summary = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있음.", description = "경매 등록자 및 낙찰자가 매너온도및 후기를 작성할 수 있습니다.")
     ResponseEntity<ApiResponseDTO<ReviewDetailResponseDTO>>  createReview(
-            ReviewRequestDTO reviewRequestDTO,
+            @RequestBody ReviewRequestDTO reviewRequestDTO,
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
     // 좋아요(찜)을 하거나 취소 가능
     @Operation(summary = "상품에 좋아요 누르기.", description = "좋아요 누르는 API")
     ResponseEntity<ApiResponseDTO<String>> createLike(
-            @PathVariable  Long bidRequestDTO,
-            LikeRequestDTO likeRequestDTO,
+            @PathVariable  Long goodsId,
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
     // 좋아요(찜)을 하거나 취소 가능
     @Operation(summary = "상품에 좋아요 취소.", description = "좋아요 취소하기 API")
     ResponseEntity<ApiResponseDTO<String>> cancelLike(
-            @PathVariable  Long bidRequestDTO,
-            LikeRequestDTO likeRequestDTO,
+            @PathVariable  Long goodsId,
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
