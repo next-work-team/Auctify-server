@@ -27,11 +27,10 @@ public interface GoodsRepository extends JpaRepository<GoodsEntity, Long>,GoodsR
 
 
     @EntityGraph(attributePaths = {
-            "image"
-            ,"bidHistories"
+            "bidHistories"
     })
     @Query("SELECT g FROM GoodsEntity g where g.goodsId = :goodsId")
-    Optional<GoodsEntity> findGoodsImageBidHistoryByGoodsId(Long goodsId);
+    Optional<GoodsEntity> findGoodsBidHistoryByGoodsId(Long goodsId);
 
     @Query("SELECT new org.example.auctify.dto.bid.BidSummaryDTO(" +
             "b.bidHistoryId, b.bidPrice, b.createdAt) " +
