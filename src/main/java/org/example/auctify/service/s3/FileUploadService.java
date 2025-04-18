@@ -100,4 +100,18 @@ public class FileUploadService {
         return UUID.randomUUID().toString() + filename;
     }
 
+
+    /**
+     * S3에 저장된 파일(오브젝트)을 삭제합니다.
+     * @param s3Key 삭제할 S3 오브젝트 키 (폴더/UUID포함된 전체 경로)
+     */
+    public void deleteFile(String s3Key) {
+        if (amazonS3.doesObjectExist(bucket, s3Key)) {
+            amazonS3.deleteObject(bucket, s3Key);
+            log.info("Deleted S3 object: {}/{}", bucket, s3Key);
+        } else {
+            log.warn("S3 object not found, skip delete: {}/{}", bucket, s3Key);
+        }
+    }
+
 }
