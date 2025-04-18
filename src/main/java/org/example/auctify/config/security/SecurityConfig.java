@@ -8,6 +8,7 @@ import org.example.auctify.service.user.CustomOAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -18,9 +19,11 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGra
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * SecurityConfig 클래스는 Spring Security를 설정하고,
@@ -45,19 +48,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         // CORS 설정
-        http.cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-            CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Arrays.asList(
-                    "https://localhost:3000",
-                    "https://www.auctify.shop"
-            ));
-            configuration.setAllowedMethods(Collections.singletonList("*"));
-            configuration.setAllowCredentials(true); // 쿠키 허용
-            configuration.setAllowedHeaders(Collections.singletonList("*"));
-            configuration.setExposedHeaders(Arrays.asList("Set-Cookie", "Authorization"));
-            configuration.setMaxAge(3600L); // CORS 설정 캐싱 시간
-            return configuration;
-        }));
+        http
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         // CSRF 보호 비활성화 (JWT 기반이므로 필요 없음)
         http.csrf(auth -> auth.disable());
@@ -95,6 +87,43 @@ public class SecurityConfig {
                 .anyRequest().authenticated());  // 그 외 모든 요청은 인증 필요
 
         return http.build();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        // 허용 가능한 기본 도메인 리스트
+        List<String> whitelist = List.of(
+                "https://localhost:3000",
+                "https://www.auctify.shop"
+        );
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", new CorsConfiguration() {
+            @Override
+            public CorsConfiguration clone() throws CloneNotSupportedException {
+                // 매 요청마다 새로운 객체가 필요하므로 clone() 메서드만 오버라이드
+                return (CorsConfiguration) super.clone();
+            }
+        }.applyPermitDefaultValues()); // applyPermitDefaultValues() 로 기본 메서드·헤더 설정을 깔끔하게 가져옵니다.
+
+        // 실제 configurationSource 로직
+        return request -> {
+            CorsConfiguration config = new CorsConfiguration();
+
+            String origin = request.getHeader(HttpHeaders.ORIGIN);
+            if (origin != null && whitelist.contains(origin)) {
+                // 요청한 Origin 값만 동적으로 허용
+                config.setAllowedOrigins(Collections.singletonList(origin));
+            }
+
+            config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
+            config.setAllowedHeaders(List.of("*"));
+            config.setAllowCredentials(true);
+            config.setExposedHeaders(List.of("Authorization", "Set-Cookie"));
+            config.setMaxAge(3600L);
+
+            return config;
+        };
     }
 
     /**
