@@ -38,8 +38,6 @@ public class GoodsController implements GoodsControllerDocs {
 
 
     private final GoodsService goodsService;
-    private final NotificationService notificationService;
-
 
 
     // 경매 물품 정보를 반환 (상세 조회)
@@ -88,10 +86,6 @@ public class GoodsController implements GoodsControllerDocs {
         try {
             Long userId = userDetails.getUserId();
             BidHistoryResponseDTO bidHistoryResponseDTO = goodsService.bidAuctionGoods(userId, bidRequestDTO);
-
-            //입찰 알림
-            notificationService.notifyBid(bidHistoryResponseDTO.getGoodsId());
-            notificationService.sendBidUpdate(bidHistoryResponseDTO.getGoodsId());
 
             return ResponseEntity.ok(ApiResponseDTO.success(bidHistoryResponseDTO));
         } catch (Exception e) {

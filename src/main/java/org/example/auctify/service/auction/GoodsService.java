@@ -157,6 +157,9 @@ public class GoodsService {
         user.getBidHistories().add(bidHistory);
         goods.getBidHistories().add(bidHistory);
 
+        //입찰 알림
+        notificationService.notifyBid(goods.getGoodsId());
+        notificationService.sendBidUpdate(goods.getGoodsId());
 
         return BidHistoryResponseDTO.builder()
                 .bidHistoryId(bidHistory.getBidHistoryId())
