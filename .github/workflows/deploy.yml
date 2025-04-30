@@ -45,11 +45,16 @@ jobs:
         run: find . -name Dockerfile
 
       - name: Docker 이미지를 생성
-        run: docker build -t auctify-server .
+        run: docker build --no-cache -t auctify-server .
         ##      - name: Docker 이미지를 생성
         #        run: docker build -t auctify-server .
       - name: Docker 이미지에 Tag 붙이기
         run: docker tag auctify-server ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
+
+      - name: Docker 이미지 푸시
+        run: docker push ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
+      - name: Docker 이미지 ID 출력
+        run: docker images | grep auctify-server
       - name: 컨테이너 로그 출력 (에러 디버깅용)
         run: docker logs auctify_server || echo "컨테이너가 아직 안 떠 있음"
       - name: SSH로 EC2에  접속하기
@@ -64,6 +69,8 @@ jobs:
             docker stop auctify_server || true
             docker rm auctify_server || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
+            echo "✅ EC2 이미지 목록 확인"
+            docker images | grep auctify_server
             echo "✅ Docker 컨테이너 실행"
             docker run -d --name auctify_server -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/auctify_server:latest
             echo "✅ 컨테이너 상태 확인"
