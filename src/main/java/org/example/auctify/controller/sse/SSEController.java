@@ -20,6 +20,9 @@ public class SSEController implements SSEControllerDocs{
 
 	@GetMapping("/subscribe")
 	public SseEmitter subscribe(@AuthenticationPrincipal CustomOauth2User user) {
+
+
+		System.out.println("~~~  SSE 요청 들어옴  ~~~");
 		Long userId = user.getUserId();
 		SseEmitter sseEmitter = sseService.subscribe(userId);
 

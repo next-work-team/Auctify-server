@@ -24,7 +24,7 @@ public class CustomOauth2User implements OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println("뭘까요 에러가 ???  CustomOauth2User.getAuthorities() :" + userDTO.getRole().name());
+        System.out.println("CustomOauth2User userDTO.getRole().name() :" + userDTO.getRole().name());
 
         return Collections.singletonList(
                 new SimpleGrantedAuthority("ROLE_"+userDTO.getRole().name())
