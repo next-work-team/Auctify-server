@@ -18,18 +18,20 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-public class ChatRoomController {
+@RequestMapping("/api/chatRoom")
+public class ChatRoomController implements ChatRoomControllerDocs{
 	private final ChatRoomService chatRoomService;
 
 	//채팅방 생성
-	@PostMapping("/chatrooms")
+	@PostMapping
 	public ResponseEntity<ApiResponseDTO<Long>> createOneToOneChatRoom(
 			@RequestBody CreateOneToOneChatReqDto createOneToOneChatReqDto,
-			/*@AuthenticationPrincipal UserEntity*/ @AuthenticationPrincipal CustomOauth2User user
+			@AuthenticationPrincipal CustomOauth2User user
 	) {
 		if (createOneToOneChatReqDto.getTheOtherUserId() == user.getUserId()) {
 			throw new IllegalArgumentException("혼자서 채팅방을 생성할 수 없습니다.");
@@ -44,7 +46,7 @@ public class ChatRoomController {
 	}
 
 	//채팅방 나가기
-	@PatchMapping("/chatrooms/{chatroomId}")
+	@PatchMapping("/{chatroomId}")
 	public ResponseEntity<Void> exitChatRoom(@PathVariable("chatroomId") Long chatRoomId, /*@AuthenticationPrincipal UserEntity*/ @AuthenticationPrincipal CustomOauth2User user) {
 		chatRoomService.exitChatRoom(chatRoomId, user);
 
@@ -52,7 +54,7 @@ public class ChatRoomController {
 	}
 
 	//채팅방 목록 조회
-	@GetMapping("/chatrooms")
+	@GetMapping
 	public ResponseEntity<ApiResponseDTO<List<GetOneToOneChatRoomListResDto>>> getOneToOneChatRoomList(
 			/*@AuthenticationPrincipal UserEntity*/@AuthenticationPrincipal CustomOauth2User user) {
 		List<GetOneToOneChatRoomListResDto> chatRoomList = chatRoomService.getOneToOneChatRoomList(user);
@@ -61,7 +63,7 @@ public class ChatRoomController {
 	}
 
 	//메시지 내역 조회
-	@GetMapping("/chatrooms/{chatroomId}/{goodsId}")
+	@GetMapping("/{chatroomId}/{goodsId}")
 	public ResponseEntity<ApiResponseDTO<GetMessageHistoryResDto>> getMessageHistory(
 			/*@AuthenticationPrincipal UserEntity*/@AuthenticationPrincipal CustomOauth2User user,
 			@PathVariable("chatroomId") Long chatRoomId,
