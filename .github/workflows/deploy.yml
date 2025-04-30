@@ -69,4 +69,4 @@ jobs:
             echo "✅ 컨테이너 상태 확인"
             docker ps -a
             echo "✅ 컨테이너 로그 출력"
-            docker logs auctify_server || echo "컨테이너 로그 없음"
+            docker logs auctify_server || echo "컨테이너 로그 없음  "
