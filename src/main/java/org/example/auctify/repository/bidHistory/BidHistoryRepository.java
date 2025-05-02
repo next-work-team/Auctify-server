@@ -13,25 +13,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface BidHistoryRepository extends JpaRepository<BidHistoryEntity, Long> {
+public interface BidHistoryRepository extends JpaRepository<BidHistoryEntity, Long>,BidHistoryRepositoryCustom {
 
-
-    //JPQL에서 JOIN FETCH를 사용할 경우 COUNT(*) 같은
-    // 카운트 쿼리를 자동으로 생성할 수 없기 때문에 쿼리 2개 사용하거나 또는
-    // EntityGraph 사용 필수
-    @EntityGraph(attributePaths = {
-            "goods",
-            "goods.bidHistories"
-    })
-    @Query("""
-    SELECT b
-    FROM BidHistoryEntity b
-    JOIN FETCH b.goods g
-    LEFT JOIN FETCH g.images gi
-    WHERE b.user.userId = :userId
-    ORDER BY b.bidHistoryId DESC
-    """)
-    Page<BidHistoryEntity> findBidHistoryByUserId(@Param("userId") Long userId, Pageable pageable);
 
     Optional<BidHistoryEntity> findFirstByGoodsOrderByCreatedAt(GoodsEntity goods);
 
