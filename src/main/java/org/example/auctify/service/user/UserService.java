@@ -158,7 +158,7 @@ public class UserService {
     }
 
     //자신의 입찰 내역 리스트를 보내줌
-    public Page<BidHistoryResponseDTO> getMyBidHistory(Long userId, int page, int size) {
+    public Page<BidHistoryResponseDTO> getMyBidHistory(Long userId, String category, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
 
         UserEntity user = userRepository.findById(userId).orElseThrow(() ->
@@ -166,7 +166,7 @@ public class UserService {
         );
 
         Page<BidHistoryEntity> bidHistoryEntityPage =
-                bidHistoryRepository.findBidHistoryByUserId(user.getUserId(), pageable);
+                bidHistoryRepository.searchMyBid(user.getUserId(), category, pageable);
 
         return bidHistoryEntityPage.map(bidHistoryEntity -> {
             return BidHistoryResponseDTO.builder()

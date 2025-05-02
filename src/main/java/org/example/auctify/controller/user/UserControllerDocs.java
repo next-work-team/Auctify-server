@@ -61,10 +61,12 @@ public interface UserControllerDocs {
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
-    @Operation(summary = "내가 입찰한 경매, 낙찰 경매품", description = "내가 입찰하거나 낙찰 받은 경매품리스트 API")
+    @Operation(summary = "유저가 입찰한 경매품에 대한 list", description = "로그인 유저가 입찰한 경매품리스트를 반환하는 API 기본적으로 시간순으로 출력(" +
+            "전체 : 넘어오는 값 없으면(default),  진행중 : BIDDING, 경매낙찰 : AWARDED_WIN, 경매종료(낙찰실패) : AWARDED_LOSE )")
     ResponseEntity<?> getMyAuctifyGoods(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "default") String category,
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 

@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class GoodsRepositoryCustomImpl implements GoodsRepositoryCustom {
+public class GoodsRepositoryImpl implements GoodsRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 

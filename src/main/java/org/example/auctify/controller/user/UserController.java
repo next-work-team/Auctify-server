@@ -148,10 +148,11 @@ public class UserController implements UserControllerDocs{
     public ResponseEntity<ApiResponseDTO<Page<BidHistoryResponseDTO>>> getMyAuctifyGoods(
             int page,
             int size,
+            String category,
             CustomOauth2User userDetails) {
         try {
             Long userId = userDetails.getUserId();
-            Page<BidHistoryResponseDTO> myBidList = userService.getMyBidHistory(userId, page, size);
+            Page<BidHistoryResponseDTO> myBidList = userService.getMyBidHistory(userId, category, page, size);
             return  ResponseEntity.ok(ApiResponseDTO.success(myBidList));
         }catch(Exception e) {
             log.error("[LOG]: {}", e.getMessage());
