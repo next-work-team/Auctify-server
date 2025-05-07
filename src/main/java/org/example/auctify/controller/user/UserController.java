@@ -283,12 +283,4 @@ public class UserController implements UserControllerDocs{
     }
 
 
-
-
-
-    @Override
-    @GetMapping(value = "/connect", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public ResponseEntity<?> subscribe(CustomOauth2User userDetails, String lastEventId) {
-        return null;
-    }
 }
