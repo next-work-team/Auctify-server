@@ -274,4 +274,13 @@ public class NotificationService {
 						.endTime(Duration.between(LocalDateTime.now(), notification.getGoods().getActionEndTime()))
 						.build()).toList();
 	}
+
+	@Transactional
+	public Long readNotification(Long id) {
+		NotificationEntity findNotification = notificationRepository.findById(id)
+				.orElseThrow(() -> new NullPointerException("알림이 존재하지 않습니다."));
+
+		findNotification.readNotification();
+		return findNotification.getId();
+	}
 }
