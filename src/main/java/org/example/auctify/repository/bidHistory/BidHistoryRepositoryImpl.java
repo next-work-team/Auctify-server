@@ -28,19 +28,45 @@ public class BidHistoryRepositoryImpl implements BidHistoryRepositoryCustom {
         QPaymentEntity payment = QPaymentEntity.paymentEntity;
         BooleanBuilder builder = new BooleanBuilder();
 
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
+        System.out.println(userId);
+        System.out.printf(">>> category raw value = [%s]%n", category);
+        category = category.trim().replaceAll("[\\[\\]]", "");
+
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
         builder.and(bid.user.userId.eq(userId));
 
-        if (category != null && !category.isEmpty()) {
+        if (category != null && ! category.isEmpty()) {
+            System.out.println("category :"  + category + "카테고리 종류");
+
             if ("BIDDING".equals(category)) {
+                System.out.println("BIDDING 호출 호출 ~!~!");
                 builder.and(goods.goodsProcessStatus.eq(GoodsProcessStatus.valueOf(category)));
             }
-            if (category.startsWith("AWARDED")){
+
+            if (category.contains("AWARDED")){
+                System.out.println("AWARDED 진입 ~!~!");
                 builder.and(goods.goodsProcessStatus.eq(GoodsProcessStatus.valueOf("AWARDED")));
 
                 if("AWARDED_WIN".equals(category)){
+                    System.out.println("AWARDED_WIN 호출 호출 ~!~!");
                     builder.and(bid.bidStatus.eq(true));
                 }
+
+                if("AWARDED_WIN_END".equals(category)){
+                    System.out.println("AWARDED_WIN_END 호출 호출 ~!~!");
+                    builder.and(bid.bidStatus.eq(true));
+                    builder.and(bid.payment.isNotNull());
+                }
+
+
                 if("AWARDED_LOSE".equals(category)){
+                    System.out.println("AWARDED_LOSE 호출 호출 ~!~!");
+
                     builder.and(bid.bidStatus.eq(false));
                 }
             }
@@ -51,7 +77,6 @@ public class BidHistoryRepositoryImpl implements BidHistoryRepositoryCustom {
                 .select(bid)
                 .distinct()
                 .from(bid)
-                //.join(bid.user).on(bid.user.userId.eq(userId))
                 .join(bid.user)
                 .join(bid.goods, goods).fetchJoin()
                 .leftJoin(goods.images, goodsImage).fetchJoin()
@@ -66,7 +91,6 @@ public class BidHistoryRepositoryImpl implements BidHistoryRepositoryCustom {
         Long total = queryFactory
                 .select(bid.count())
                 .from(bid)
-                //.join(bid.user).on(bid.user.userId.eq(userId))
                 .join(bid.user)
                 .join(bid.goods, goods)
                 .leftJoin(bid.payment, payment)

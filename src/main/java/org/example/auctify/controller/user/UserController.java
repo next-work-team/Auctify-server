@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -151,6 +152,7 @@ public class UserController implements UserControllerDocs{
             String category,
             CustomOauth2User userDetails) {
         try {
+            System.out.println(category);
             Long userId = userDetails.getUserId();
             Page<BidHistoryResponseDTO> myBidList = userService.getMyBidHistory(userId, category, page, size);
             return  ResponseEntity.ok(ApiResponseDTO.success(myBidList));

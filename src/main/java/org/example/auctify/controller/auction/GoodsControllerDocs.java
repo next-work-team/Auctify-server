@@ -87,10 +87,5 @@ public interface GoodsControllerDocs {
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
-//    // 낙찰자가 실제 결제 후 정보를 등록하는 API
-//    @Operation(summary = "낙찰 후 낙찰구매 정보를 등록할 수 있다.", description = "낙찰 후 결제하면서 정보를 입력하면 정보를 등록할 수 있는 API")
-//    ResponseEntity<ApiResponseDTO<BidPurchaseResponseDTO>> create(
-//            BidPurchaseRequestDTO bidPurchaseRequestDTO,
-//            @AuthenticationPrincipal CustomOauth2User userDetails
-//    );
+
 }
