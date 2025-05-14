@@ -61,8 +61,11 @@ public interface UserControllerDocs {
             @AuthenticationPrincipal CustomOauth2User userDetails
     );
 
+
+    //[ 전체 │ 진행중 │ 결제 대기 │ 판매 완료 │종료됨 ]
+    //판매 완료 : 낙찰 받고 결제까지 완료 (본인이)
     @Operation(summary = "유저가 입찰한 경매품에 대한 list", description = "로그인 유저가 입찰한 경매품리스트를 반환하는 API 기본적으로 시간순으로 출력(" +
-            "전체 : 넘어오는 값 없으면(default),  진행중 : BIDDING, 경매낙찰 : AWARDED_WIN, 경매종료(낙찰실패) : AWARDED_LOSE )")
+            "전체 : 넘어오는 값 없으면(default),  진행중 : BIDDING, 결제 대기 : AWARDED_WIN,  판매 완료(낙찰 받고 결제까지 완료 (본인이)) : AWARDED_WIN_END,  경매종료(낙찰실패) : AWARDED_LOSE )")
     ResponseEntity<?> getMyAuctifyGoods(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
