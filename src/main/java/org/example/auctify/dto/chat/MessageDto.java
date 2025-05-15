@@ -22,4 +22,5 @@ public class MessageDto implements Serializable {
 	private String content;
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
 	private LocalDateTime sendTime;
+	private Integer readCount;
 }

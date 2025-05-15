@@ -14,7 +14,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class GetMessageHistoryResDto {
-	private List<String> contents;
+	/*private List<String> contents;
 	private List<LocalDateTime> sendTimes;
-	private String goodsName;
+	private String goodsName;*/
+
+	private String id;
+	private String text;
+	private LocalDateTime timestamp;
+	private String sender;
+	private boolean isMine;
 }

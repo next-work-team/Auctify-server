@@ -13,11 +13,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class GetOneToOneChatRoomListResDto {
-	private String roomTitle;
+	/*private String roomTitle;
 	private String lastMessage;
 	private LocalDateTime lastMessageTime;
 	private String theOtherUserImage;
 	private Long theOtherUserId;
 	private Long chatRoomId;
-	private Long goodsId;
+	private Long goodsId;*/
+
+	private long id;
+	private UserDto user;
+	private LastMessageDto lastMessage;
+	private long unreadCount;
+	private AuctionDto auction;
 }
+

@@ -8,6 +8,7 @@ import org.example.auctify.dto.chat.GetMessageHistoryResDto;
 import org.example.auctify.dto.chat.GetOneToOneChatRoomListResDto;
 import org.example.auctify.dto.response.ApiResponseDTO;
 import org.example.auctify.dto.social.CustomOauth2User;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,9 +42,18 @@ public interface ChatRoomControllerDocs {
 
 	//메시지 내역 조회
 	@Operation(summary = "메시지 내역 조회", description = "메시지 내역 조회 페이지입니다.")
-	ResponseEntity<ApiResponseDTO<GetMessageHistoryResDto>> getMessageHistory(
-		@AuthenticationPrincipal CustomOauth2User user,
-		@PathVariable("chatroomId") Long chatRoomId,
-		@PathVariable("goodsId") Long goodsId
+	ResponseEntity<ApiResponseDTO<List<GetMessageHistoryResDto>>> getMessageHistory(
+			@AuthenticationPrincipal CustomOauth2User user,
+			@PathVariable("chatroomId") Long chatRoomId
 	);
+
+	// 채팅방에 연결되어있는지 확인하는 API
+	@Operation(summary = "채팅방에 연결되어있는지 확인", description = "채팅방에 연결되어있는지 확인하는 API입니다.")
+	public ResponseEntity<ApiResponseDTO<String>> checkAlreadyConnected(@AuthenticationPrincipal CustomOauth2User user,
+																		@PathVariable Long chatRoomId);
+
+	// 대화가 가능한 채팅방인지 확인하는 API
+	@Operation(summary = "대화가 가능한 채팅방인지 확인", description = "대화가 가능한 채팅방인지 확인하는 API입니다.")
+	public ResponseEntity<ApiResponseDTO<String>> isPossibleChatRoom(@AuthenticationPrincipal CustomOauth2User user,
+																	 @PathVariable Long chatRoomId);
 }
