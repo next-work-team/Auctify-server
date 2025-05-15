@@ -272,6 +272,7 @@ public class NotificationService {
 						.sender(notification.getSender().getNickName())
 						.price(notification.getGoods().getCurrentBidPrice())
 						.endTime(Duration.between(LocalDateTime.now(), notification.getGoods().getActionEndTime()))
+						.isRead(notification.getIsRead())
 						.build()).toList();
 	}
 
