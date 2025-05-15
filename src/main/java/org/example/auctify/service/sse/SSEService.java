@@ -12,19 +12,38 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RequiredArgsConstructor
 @Transactional
 public class SSEService {
-	public SseEmitter subscribe(Long userId) {
+	public SseEmitter subscribeNotification(Long userId) {
 		SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 		try {
-			sseEmitter.send(SseEmitter.event().name("connect"));
+			sseEmitter.send(SseEmitter.event().name("connect notification"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
-		SSEController.sseEmitters.put(userId, sseEmitter);
+		SSEController.sseEmittersNotification.put(userId, sseEmitter);
 
-		sseEmitter.onCompletion(() -> SSEController.sseEmitters.remove(userId));
-		sseEmitter.onTimeout(() -> SSEController.sseEmitters.remove(userId));
-		sseEmitter.onError((e) -> SSEController.sseEmitters.remove(userId));
+		sseEmitter.onCompletion(() -> SSEController.sseEmittersNotification.remove(userId));
+		sseEmitter.onTimeout(() -> SSEController.sseEmittersNotification.remove(userId));
+		sseEmitter.onError((e) -> SSEController.sseEmittersNotification.remove(userId));
+
+		return sseEmitter;
+	}
+
+	public SseEmitter subscribeBid(String clientId) {
+		SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
+		try {
+			sseEmitter.send(SseEmitter.event()
+					.name("connect bid")
+					.data(clientId));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		SSEController.sseEmittersBid.put(clientId, sseEmitter);
+
+		sseEmitter.onCompletion(() -> SSEController.sseEmittersBid.remove(clientId));
+		sseEmitter.onTimeout(() -> SSEController.sseEmittersBid.remove(clientId));
+		sseEmitter.onError((e) -> SSEController.sseEmittersBid.remove(clientId));
 
 		return sseEmitter;
 	}

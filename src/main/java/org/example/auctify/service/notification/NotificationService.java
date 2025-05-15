@@ -45,7 +45,7 @@ public class NotificationService {
 
 
 	//채팅 알림
-	public void notifyChat(MessageDto messageDto) {
+/*	public void notifyChat(MessageDto messageDto) {
 		UserEntity findSender = userRepository.findById(messageDto.getSender())
 				.orElseThrow(() -> new NullPointerException("존재하지 않는 회원입니다."));
 		UserEntity findReceiver = userRepository.findById(messageDto.getReceiver())
@@ -73,7 +73,7 @@ public class NotificationService {
 
 			notificationSender.send("/sub/notification/" + findReceiver.getUserId(), chatNotificationDto);
 		}
-	}
+	}*/
 
 	//입찰 알림
 	public void notifyBid(Long goodsId) {
@@ -93,8 +93,8 @@ public class NotificationService {
 		for (UserEntity user : users) {
 			Long userId = user.getUserId();
 
-			if (SSEController.sseEmitters.containsKey(userId)) {
-				SseEmitter sseEmitter = SSEController.sseEmitters.get(userId);
+			if (SSEController.sseEmittersNotification.containsKey(userId)) {
+				SseEmitter sseEmitter = SSEController.sseEmittersNotification.get(userId);
 				try {
 					Map<String, String> eventData = new HashMap<>();
 					eventData.put("message", "입찰을 했습니다.");
@@ -114,7 +114,7 @@ public class NotificationService {
 							.build();
 					notificationRepository.save(notification);
 				} catch (Exception e) {
-					SSEController.sseEmitters.remove(userId);
+					SSEController.sseEmittersNotification.remove(userId);
 				}
 			}
 		}
@@ -131,8 +131,8 @@ public class NotificationService {
 
 		Long userId = successfulBid.getUser().getUserId();
 
-		if (SSEController.sseEmitters.containsKey(userId)) {
-			SseEmitter sseEmitter = SSEController.sseEmitters.get(userId);
+		if (SSEController.sseEmittersNotification.containsKey(userId)) {
+			SseEmitter sseEmitter = SSEController.sseEmittersNotification.get(userId);
 			try {
 				Map<String, String> eventData = new HashMap<>();
 				eventData.put("message", "낙찰에 성공했습니다.");
@@ -147,7 +147,7 @@ public class NotificationService {
 						.build();
 				notificationRepository.save(notification);
 			} catch (Exception e) {
-				SSEController.sseEmitters.remove(userId);
+				SSEController.sseEmittersNotification.remove(userId);
 			}
 		}
 	}
@@ -166,8 +166,8 @@ public class NotificationService {
 		for (UserEntity user : users) {
 			Long userId = user.getUserId();
 
-			if (SSEController.sseEmitters.containsKey(userId)) {
-				SseEmitter sseEmitter = SSEController.sseEmitters.get(userId);
+			if (SSEController.sseEmittersNotification.containsKey(userId)) {
+				SseEmitter sseEmitter = SSEController.sseEmittersNotification.get(userId);
 				try {
 					Map<String, String> eventData = new HashMap<>();
 					eventData.put("message", "낙찰에 실패했습니다.");
@@ -184,7 +184,7 @@ public class NotificationService {
 							.build();
 					notificationRepository.save(notification);
 				} catch (Exception e) {
-					SSEController.sseEmitters.remove(userId);
+					SSEController.sseEmittersNotification.remove(userId);
 				}
 			}
 		}
@@ -199,9 +199,9 @@ public class NotificationService {
 		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAt(goods)
 				.orElseThrow(() -> new NullPointerException("입찰 내역을 찾을 수 없습니다."));
 
-		for (Long key : SSEController.sseEmitters.keySet()) {
-			if (SSEController.sseEmitters.containsKey(key)) {
-				SseEmitter sseEmitter = SSEController.sseEmitters.get(key);
+		for (String key : SSEController.sseEmittersBid.keySet()) {
+			if (SSEController.sseEmittersBid.containsKey(key)) {
+				SseEmitter sseEmitter = SSEController.sseEmittersBid.get(key);
 
 				try {
 					Map<String, String> eventData = new HashMap<>();
@@ -210,11 +210,11 @@ public class NotificationService {
 					eventData.put("goodsName", goods.getGoodsName()); //입찰 상품 이름
 					eventData.put("bidUser", findBidHistory.getUser().getNickName()); //입찰자 이름
 					eventData.put("bidPrice", findBidHistory.getBidPrice().toString()); //입찰 가격
-					eventData.put("createdAt", findBidHistory.getCreatedAt().toString()); //입찰 가격
+					eventData.put("createdAt", findBidHistory.getCreatedAt().toString()); //입찰 시간
 
 					sseEmitter.send(SseEmitter.event().name("updateBid").data(eventData));
 				} catch (Exception e) {
-					SSEController.sseEmitters.remove(key);
+					SSEController.sseEmittersBid.remove(key);
 				}
 			}
 		}
@@ -229,8 +229,8 @@ public class NotificationService {
 			for (BidHistoryEntity bidHistory : bidHistoryList) {
 				Long userId = bidHistory.getUser().getUserId();
 
-				if (SSEController.sseEmitters.containsKey(userId)) {
-					SseEmitter sseEmitter = SSEController.sseEmitters.get(userId);
+				if (SSEController.sseEmittersNotification.containsKey(userId)) {
+					SseEmitter sseEmitter = SSEController.sseEmittersNotification.get(userId);
 
 					try {
 						Map<String, String> eventData = new HashMap<>();
@@ -249,7 +249,7 @@ public class NotificationService {
 								.build();
 						notificationRepository.save(notification);
 					} catch (Exception e) {
-						SSEController.sseEmitters.remove(userId);
+						SSEController.sseEmittersNotification.remove(userId);
 					}
 				}
 			}

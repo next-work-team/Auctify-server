@@ -9,8 +9,11 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Tag(name = "SSE", description = "SSE API")
 public interface SSEControllerDocs {
 
-	@Operation(summary = "SSE 구독", description = "SSE 구독하는 API 입니다.")
-	SseEmitter subscribe(
+	@Operation(summary = "알림 SSE 구독", description = "알림 SSE 구독하는 API 입니다.")
+	SseEmitter subscribeNotification(
 			@AuthenticationPrincipal CustomOauth2User user
 	);
+
+	@Operation(summary = "입찰 SSE 구독", description = "입찰 SSE 구독하는 API 입니다.")
+	SseEmitter subscribeBid();
 }
