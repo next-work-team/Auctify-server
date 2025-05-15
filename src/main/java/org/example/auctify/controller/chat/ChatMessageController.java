@@ -2,6 +2,7 @@ package org.example.auctify.controller.chat;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.example.auctify.dto.chat.EnterMessageDto;
 import org.example.auctify.dto.chat.JoinRoomDto;
 import org.example.auctify.dto.chat.LeaveRoomDto;
 import org.example.auctify.dto.chat.MessageDto;
@@ -26,7 +27,7 @@ public class ChatMessageController {
 		return ResponseEntity.ok().build();
 	}
 
-	@MessageMapping("/chat/enter")
+	/*@MessageMapping("/chat/enter")
 	public void joinRoom(@Payload JoinRoomDto joinRoomDto) {
 		userSessionService.enterChatRoom(joinRoomDto.getSenderId(), joinRoomDto.getChatRoomId());
 	}
@@ -34,5 +35,10 @@ public class ChatMessageController {
 	@MessageMapping("/chat/leave")
 	public void leaveRoom(@Payload LeaveRoomDto leaveRoomDto) {
 		userSessionService.leaveChatRoom(leaveRoomDto.getSenderId());
+	}*/
+
+	@MessageMapping("/enter")
+	public void sendEnter(@Payload EnterMessageDto enterMessageDto) {
+		chatMessageService.sendEnterMessage(enterMessageDto);
 	}
 }

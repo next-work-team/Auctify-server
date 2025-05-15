@@ -24,11 +24,9 @@ public class ChatMessageEntity {
 
 	private Long chatRoomId;
 
-	//private Long sender;
-
-	//private Long receiver;
-
 	private String content; // 메세지 내용
 
 	private LocalDateTime sendDate; // 보낸 시간
+
+	private Integer unReadCount;
 }

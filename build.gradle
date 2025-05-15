@@ -74,6 +74,17 @@ dependencies {
     // JSON 라이브러리
     implementation 'com.googlecode.json-simple:json-simple:1.1.1'
 
+    // 테스트 의존성
+    testImplementation 'org.springframework.security:spring-security-test'
+
+    // Spring Boot Test and JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.0'
+
+    // Mockito for mocking dependencies
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
 }
 
