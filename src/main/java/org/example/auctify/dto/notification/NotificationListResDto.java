@@ -22,4 +22,5 @@ public class NotificationListResDto {
 	private LocalDateTime createdAt;
 	private Long price;
 	private Duration endTime;
+	private boolean isRead;
 }

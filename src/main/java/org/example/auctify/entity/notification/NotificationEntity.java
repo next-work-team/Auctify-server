@@ -51,7 +51,8 @@ public class NotificationEntity extends BaseTimeEntity {
 	@JoinColumn(name = "goods_id")
 	private GoodsEntity goods;
 
-	private Boolean isRead;
+	@Builder.Default
+	private Boolean isRead = false;
 
 	public void readNotification() {
 		this.isRead = true;
