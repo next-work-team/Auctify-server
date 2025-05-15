@@ -81,7 +81,7 @@ public class NotificationService {
 				() -> new IllegalArgumentException("상품을 찾을 수 없습니다.")
 		);
 
-		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAt(goods)
+		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAtDesc(goods)
 				.orElseThrow(() -> new NullPointerException("입찰 내역을 찾을 수 없습니다."));
 
 		List<UserEntity> users = goods.getBidHistories().stream()
@@ -196,7 +196,7 @@ public class NotificationService {
 				() -> new IllegalArgumentException("상품을 찾을 수 없습니다.")
 		);
 
-		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAt(goods)
+		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAtDesc(goods)
 				.orElseThrow(() -> new NullPointerException("입찰 내역을 찾을 수 없습니다."));
 
 		for (String key : SSEController.sseEmittersBid.keySet()) {

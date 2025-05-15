@@ -16,7 +16,7 @@ import org.springframework.data.repository.query.Param;
 public interface BidHistoryRepository extends JpaRepository<BidHistoryEntity, Long>,BidHistoryRepositoryCustom {
 
 
-    Optional<BidHistoryEntity> findFirstByGoodsOrderByCreatedAt(GoodsEntity goods);
+    Optional<BidHistoryEntity> findFirstByGoodsOrderByCreatedAtDesc(GoodsEntity goods);
 
     Optional<BidHistoryEntity> findByGoodsAndBidStatus(GoodsEntity goods, Boolean BidStatus);
 
