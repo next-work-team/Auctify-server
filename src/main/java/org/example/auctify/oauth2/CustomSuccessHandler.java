@@ -72,16 +72,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         System.out.println("referer  =================");
         System.out.println(referer);
         System.out.println(referer);
-        System.out.println(referer);
-        System.out.println(referer);
-        System.out.println(referer);
-        System.out.println(referer);
         System.out.println("referer  =================");
-        if (referer != null &&  referer.contains("localhost")) {
-            targetUrl = "https://localhost:3000/";
-        } else {
-            targetUrl = "https://www.auctify.shop/";
-        }
+        System.out.println(request.getRequestURL());
+        System.out.println("request  =================");
+
+
+        targetUrl = "https://localhost:3000/";
+
+
+        // 나중에 주석 풀어야함
+//        if (referer != null &&  referer.contains("localhost")) {
+//            targetUrl = "https://localhost:3000/";
+//        } else {
+//            targetUrl = "https://www.auctify.shop/";
+//        }
 
         System.out.println("리디렉션할 URL: " + targetUrl);
         response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
@@ -106,7 +110,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Cookie cookie = new Cookie(key, value);
         cookie.setMaxAge(3600 * 24 * 24);  // 24일 유효
 
-        boolean isLocal = request.getServerName().contains("localhost");
+        boolean isLocal = true;
 
         cookie.setSecure(!isLocal);  // 로컬은 Secure 비활성화
         cookie.setHttpOnly(true);    // JavaScript 접근 방지
