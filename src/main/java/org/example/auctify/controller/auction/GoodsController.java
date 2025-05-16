@@ -40,7 +40,7 @@ public class GoodsController implements GoodsControllerDocs {
     private final GoodsService goodsService;
     private final NotificationService notificationService;
 
-    // 경매 물품 정보를 반환 (상세 조회)
+    // 경매 물품 정보를 반환 (상세 조회)!
 
     @GetMapping("/{goodsId}")
     public ResponseEntity<ApiResponseDTO<GoodsResponseDTO>> getGoods(
