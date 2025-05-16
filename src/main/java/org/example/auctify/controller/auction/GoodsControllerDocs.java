@@ -57,7 +57,7 @@ public interface GoodsControllerDocs {
             @RequestParam(required = false) String goodsProcessStatus,
             @RequestParam(required = false) String goodsName,
             @RequestParam(defaultValue = "createdAt") String sort,
-            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "1") int page,
             @RequestParam(defaultValue = "10") int size
     );
 

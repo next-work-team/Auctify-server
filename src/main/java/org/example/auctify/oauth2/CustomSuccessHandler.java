@@ -64,19 +64,19 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         SavedRequest savedRequest = requestCache.getRequest(request, response);
 
         // 리디렉션할 URL 결정 (로컬 및 배포 환경에 따라 다름)
-//        String serverName = request.getServerName();
-//        String targetUrl;
-//
-//        if (serverName.contains("localhost")) {
-//            targetUrl = "https://localhost:8080/my";
-//        } else {
-//            targetUrl = "https://www.auctify.shop";
-//        }
+
 
         String referer = request.getHeader("Referer");
         String targetUrl;
 
-
+        System.out.println("referer  =================");
+        System.out.println(referer);
+        System.out.println(referer);
+        System.out.println(referer);
+        System.out.println(referer);
+        System.out.println(referer);
+        System.out.println(referer);
+        System.out.println("referer  =================");
         if (referer != null &&  referer.contains("localhost")) {
             targetUrl = "https://localhost:3000/";
         } else {
@@ -115,7 +115,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             cookie.setDomain("auctify.shop");
             cookie.setAttribute("SameSite", "None");  // 배포환경은 SameSite=None
         } else {
-            cookie.setAttribute("SameSite", "None");   // 로컬환경은 SameSite=Lax
+            cookie.setAttribute("SameSite", "Lax");  // 로컬은 Lax 권장
         }
 
         cookie.setPath("/");  // 모든 경로에 쿠키 적용
