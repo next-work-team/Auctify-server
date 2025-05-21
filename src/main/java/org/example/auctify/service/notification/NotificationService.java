@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,9 @@ import lombok.RequiredArgsConstructor;
 import org.example.auctify.controller.notification.NotificationController;
 import org.example.auctify.controller.sse.SSEController;
 import org.example.auctify.dto.chat.MessageDto;
+import org.example.auctify.dto.notification.AuctionSummaryDTO;
+import org.example.auctify.dto.notification.BidHistoryDTO;
+import org.example.auctify.dto.notification.BidUpdateResDTO;
 import org.example.auctify.dto.notification.ChatNotificationDto;
 import org.example.auctify.dto.notification.NotificationListResDto;
 import org.example.auctify.dto.notification.NotificationType;
@@ -42,7 +46,6 @@ public class NotificationService {
 	private final NotificationSender notificationSender;
 	private final UserSessionService userSessionService;
 	private final ChatRoomRepository chatRoomRepository;
-
 
 	//채팅 알림
 /*	public void notifyChat(MessageDto messageDto) {
@@ -196,23 +199,40 @@ public class NotificationService {
 				() -> new IllegalArgumentException("상품을 찾을 수 없습니다.")
 		);
 
-		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAtDesc(goods)
-				.orElseThrow(() -> new NullPointerException("입찰 내역을 찾을 수 없습니다."));
+//		BidHistoryEntity findBidHistory = bidHistoryRepository.findFirstByGoodsOrderByCreatedAtDesc(goods)
+//				.orElseThrow(() -> new NullPointerException("입찰 내역을 찾을 수 없습니다."));
+
+		List<BidHistoryEntity> bidHistories = goods.getBidHistories().stream()
+				.sorted(Comparator.comparing(BidHistoryEntity::getCreatedAt).reversed())
+				.limit(5)
+				.toList();
+
+		List<BidHistoryDTO> bidHistoriesDTO = bidHistories.stream()
+				.map(bidHistory -> BidHistoryDTO.builder()
+						.nickname(bidHistory.getUser().getNickName())
+						.price(bidHistory.getBidPrice())
+						.createdAt(bidHistory.getCreatedAt())
+						.build())
+				.toList();
+
+		AuctionSummaryDTO auctionSummaryDTO = AuctionSummaryDTO.builder()
+				.maxBidPrice(goods.getMaxBidPrice())
+				.participantsCount(goods.getBidHistories().size())
+				.remainingTime(Duration.between(LocalDateTime.now(), goods.getActionEndTime()))
+				.build();
+
+		BidUpdateResDTO bidUpdateResDTO = BidUpdateResDTO.builder()
+				.goodsId(goods.getGoodsId())
+				.bidHistory(bidHistoriesDTO)
+				.auctionSummary(auctionSummaryDTO)
+				.build();
 
 		for (String key : SSEController.sseEmittersBid.keySet()) {
 			if (SSEController.sseEmittersBid.containsKey(key)) {
 				SseEmitter sseEmitter = SSEController.sseEmittersBid.get(key);
 
 				try {
-					Map<String, String> eventData = new HashMap<>();
-					eventData.put("message", "입찰을 했습니다.");
-					eventData.put("goodsId", goods.getGoodsId().toString()); //입찰 상품 id
-					eventData.put("goodsName", goods.getGoodsName()); //입찰 상품 이름
-					eventData.put("bidUser", findBidHistory.getUser().getNickName()); //입찰자 이름
-					eventData.put("bidPrice", findBidHistory.getBidPrice().toString()); //입찰 가격
-					eventData.put("createdAt", findBidHistory.getCreatedAt().toString()); //입찰 시간
-
-					sseEmitter.send(SseEmitter.event().name("updateBid").data(eventData));
+					sseEmitter.send(SseEmitter.event().name("updateBid").data(bidUpdateResDTO));
 				} catch (Exception e) {
 					SSEController.sseEmittersBid.remove(key);
 				}
