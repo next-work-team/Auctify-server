@@ -115,12 +115,13 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         cookie.setSecure(!isLocal);  // 로컬은 Secure 비활성화
         cookie.setHttpOnly(true);    // JavaScript 접근 방지
 
-        if (!isLocal) {
-            cookie.setDomain("auctify.shop");
+        if (!isLocal) { // 나중에 수정
+            //cookie.setDomain("auctify.shop");
             cookie.setAttribute("SameSite", "None");  // 배포환경은 SameSite=None
         } else {
             cookie.setAttribute("SameSite", "Lax");  // 로컬은 Lax 권장
         }
+        cookie.setAttribute("SameSite", "Lax");  // 로컬은 Lax 권장
 
         cookie.setPath("/");  // 모든 경로에 쿠키 적용
 
