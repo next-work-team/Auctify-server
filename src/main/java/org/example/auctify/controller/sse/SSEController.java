@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.auctify.dto.social.CustomOauth2User;
 import org.example.auctify.service.sse.SSEService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @RestController
 @RequestMapping("/api/sse")
 @RequiredArgsConstructor
+@Slf4j
 public class SSEController implements SSEControllerDocs{
 	private final SSEService sseService;
 	public static Map<Long, SseEmitter> sseEmittersNotification = new ConcurrentHashMap<>();
@@ -23,8 +25,7 @@ public class SSEController implements SSEControllerDocs{
 
 	@GetMapping("/subscribe/notification")
 	public SseEmitter subscribeNotification(@AuthenticationPrincipal CustomOauth2User user) {
-
-		System.out.println("~~~ Notification SSE 요청 들어옴  ~~~");
+		log.info("~~~ Notification SSE 요청 들어옴  ~~~");
 		Long userId = user.getUserId();
 		SseEmitter sseEmitter = sseService.subscribeNotification(userId);
 
@@ -33,8 +34,7 @@ public class SSEController implements SSEControllerDocs{
 
 	@GetMapping("/subscribe/bid")
 	public SseEmitter subscribeBid() {
-
-		System.out.println("~~~ Bid SSE 요청 들어옴  ~~~");
+		log.info("~~~ Bid SSE 요청 들어옴  ~~~");
 		String clientId = UUID.randomUUID().toString();
 		SseEmitter sseEmitter = sseService.subscribeBid(clientId);
 

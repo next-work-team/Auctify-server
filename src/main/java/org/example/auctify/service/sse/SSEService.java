@@ -2,6 +2,7 @@ package org.example.auctify.service.sse;
 
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.auctify.controller.notification.NotificationController;
 import org.example.auctify.controller.sse.SSEController;
 import org.springframework.stereotype.Service;
@@ -11,11 +12,13 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class SSEService {
 	public SseEmitter subscribeNotification(Long userId) {
 		SseEmitter sseEmitter = new SseEmitter(Long.MAX_VALUE);
 		try {
 			sseEmitter.send(SseEmitter.event().name("connect notification"));
+			log.info("Notification SSE 연결 완료");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -35,6 +38,7 @@ public class SSEService {
 			sseEmitter.send(SseEmitter.event()
 					.name("connect bid")
 					.data(clientId));
+			log.info("Bid SSE 연결 완료");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
