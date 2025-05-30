@@ -112,7 +112,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         boolean isLocal = true;
 
-        cookie.setSecure(!isLocal);  // 로컬은 Secure 비활성화
+        cookie.setSecure(false);  // 로컬은 Secure 비활성화
         cookie.setHttpOnly(true);    // JavaScript 접근 방지
 
 //        if (!isLocal) { // 나중에 수정
