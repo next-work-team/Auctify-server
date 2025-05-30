@@ -22,11 +22,12 @@ public class CorsMvcConfig implements WebMvcConfigurer {
         // 활성화된 프로파일 목록 중에 "local" 이 있으면 로컬, 아니면 프로덕션
         String[] activeProfiles = env.getActiveProfiles();
         String[] allowedOrigins;
-        if (Arrays.asList(activeProfiles).contains("local")) {
-            allowedOrigins = new String[]{ LOCAL_ORIGIN };
-        } else {
-            allowedOrigins = new String[]{ PROD_ORIGIN };
-        }
+//        if (Arrays.asList(activeProfiles).contains("local")) {
+//            allowedOrigins = new String[]{ LOCAL_ORIGIN };
+//        } else {
+//            allowedOrigins = new String[]{ PROD_ORIGIN };
+//        }
+        allowedOrigins = new String[]{ LOCAL_ORIGIN };
 
         registry.addMapping("/**")
                 // spring 6.2+ 에선 allowedOrigins 대신 patterns 권장

@@ -117,6 +117,9 @@ public class SecurityConfig {
                 config.setAllowedOrigins(Collections.singletonList(origin));
             }
 
+            // 추후 지우기
+            config.setAllowedOrigins(List.of("https://localhost:3000"));
+
             config.setAllowedMethods(List.of("GET","POST","PUT","DELETE","OPTIONS"));
             config.setAllowedHeaders(List.of("*"));
             config.setAllowCredentials(true);
