@@ -83,18 +83,38 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
 
         response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("application/json;charset=UTF-8");
+        response.setContentType("text/html;charset=UTF-8");
 
 //
 //        targetUrl = "https://localhost:3000/";
 
         Map<String, Object> data = new HashMap<>();
-        data.put("status", "success");
-        data.put("message", "소셜 로그인 성공");
-        // 필요하면 토큰, 사용자 정보 등도 추가 가능
-        // data.put("user", authentication.getPrincipal());
+//        data.put("status", "success");
+//        data.put("message", "소셜 로그인 성공");
+//        // 필요하면 토큰, 사용자 정보 등도 추가 가능
+//        // data.put("user", authentication.getPrincipal());
+//
+//        response.getWriter().write(objectMapper.writeValueAsString(data));
 
-        response.getWriter().write(objectMapper.writeValueAsString(data));
+        String html = """
+<!DOCTYPE html>
+<html>
+  <body>
+    <script>
+      window.opener.postMessage(
+        {
+          type: 'OAUTH_SUCCESS',
+          message: '로그인 성공'
+        },
+        'https://localhost:3000' // 개발 환경일 경우
+      );
+      window.close();
+    </script>
+  </body>
+</html>
+""";
+
+        response.getWriter().write(html);
         response.getWriter().flush();
 
 
