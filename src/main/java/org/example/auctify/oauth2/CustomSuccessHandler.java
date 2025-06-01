@@ -75,8 +75,8 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     <script>
       window.opener.postMessage(
         {
-          type: 'OAUTH_SUCCESS',
-          message: '로그인 성공'
+    type: 'OAUTH_SUCCESS',
+    redirectTo: '/' // or '/dashboard'
         },
         'https://localhost:3000' // 개발 환경일 경우
       );
