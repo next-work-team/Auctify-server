@@ -63,39 +63,26 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         // 👉 팝업 여부 확인
         boolean isPopup = "true".equals(request.getParameter("popup"));
 
-        if (isPopup) {
-            // 👉 팝업 로그인 성공 시 HTML + postMessage
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("text/html;charset=UTF-8");
+        // 👉 팝업 로그인 성공 시 HTML + postMessage
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("text/html;charset=UTF-8");
 
-            String html = """
-<script>
-  window.opener.postMessage(
-    {
-      type: 'OAUTH_SUCCESS',
-      redirectTo: '/', // ✅ 원래 창이 이동할 경로
-    },
-    window.opener.location.origin // 안전하게 현재 origin 사용
-  );
-  window.close();
-</script>
-                    """;
+        String html = """
+                <script>
+                  window.opener.postMessage(
+                    {
+                      type: 'OAUTH_SUCCESS',
+                      redirectTo: '/', // ✅ 원래 창이 이동할 경로
+                    },
+                    window.opener.location.origin // 안전하게 현재 origin 사용
+                  );
+                  window.close();
+                </script>
+                                    """;
 
-            response.getWriter().write(html);
-            response.getWriter().flush();
-        } else {
-            // 👉 일반 리디렉션 흐름
-            String redirectUrl;
-            String referer = request.getHeader("Referer");
-
-            if (referer != null && referer.contains("localhost")) {
-                redirectUrl = "https://localhost:3000/";
-            } else {
-                redirectUrl = "https://www.auctify.shop/";
-            }
-
-            getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-        }
+        response.getWriter().write(html);
+        response.getWriter().flush();
+    }
 
 
 //    @Override
@@ -193,7 +180,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //        // response.setCharacterEncoding("UTF-8");
 //        // response.getWriter().write("{\"message\": \"success\", \"token\": \"" + token + "\"}");
 //    }
-    }
+
     /**
      * 쿠키를 생성하는 유틸리티 메소드
      * @param key 쿠키의 이름 (여기서는 "Authorization")
