@@ -1,5 +1,6 @@
 package org.example.auctify.oauth2;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -16,7 +17,9 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  * CustomSuccessHandler 클래스는 OAuth2 로그인 인증 성공 후 실행되는 핸들러입니다.
@@ -27,6 +30,8 @@ import java.util.Iterator;
 public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
 
     private final JWTUtil jwtUtil;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
 
     // 원본 요청 URL을 유지하기 위한 캐시 (필요 시 활용 가능)
     private final RequestCache requestCache = new HttpSessionRequestCache();
@@ -77,7 +82,20 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         System.out.println("request  =================");
 
 
-        targetUrl = "https://localhost:3000/";
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.setContentType("application/json;charset=UTF-8");
+
+//
+//        targetUrl = "https://localhost:3000/";
+
+        Map<String, Object> data = new HashMap<>();
+        data.put("status", "success");
+        data.put("message", "소셜 로그인 성공");
+        // 필요하면 토큰, 사용자 정보 등도 추가 가능
+        // data.put("user", authentication.getPrincipal());
+
+        response.getWriter().write(objectMapper.writeValueAsString(data));
+        response.getWriter().flush();
 
 
         // 나중에 주석 풀어야함
@@ -87,11 +105,11 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 //            targetUrl = "https://www.auctify.shop/";
 //        }
 
-        System.out.println("리디렉션할 URL: " + targetUrl);
-        response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+//        System.out.println("리디렉션할 URL: " + targetUrl);
+//        response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
 
         // 설정된 URL로 리디렉션 수행
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        //getRedirectStrategy().sendRedirect(request, response, targetUrl);
 
         // 필요 시 JSON 응답 형태로 변경 가능 (주석 처리된 예시 참고)
         // response.setContentType("application/json");
