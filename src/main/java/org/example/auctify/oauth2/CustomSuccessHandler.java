@@ -69,21 +69,16 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
             response.setContentType("text/html;charset=UTF-8");
 
             String html = """
-<!DOCTYPE html>
-<html>
-  <body>
-    <script>
-      window.opener.postMessage(
-        {
-    type: 'OAUTH_SUCCESS',
-    redirectTo: '/' // or '/dashboard'
-        },
-        'https://localhost:3000' // 개발 환경일 경우
-      );
-      window.close();
-    </script>
-  </body>
-</html>
+<script>
+  window.opener.postMessage(
+    {
+      type: 'OAUTH_SUCCESS',
+      redirectTo: '/', // ✅ 원래 창이 이동할 경로
+    },
+    window.opener.location.origin // 안전하게 현재 origin 사용
+  );
+  window.close();
+</script>
                     """;
 
             response.getWriter().write(html);
