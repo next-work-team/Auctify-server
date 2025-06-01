@@ -43,100 +43,162 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        System.out.println("인증에 성공했습니다 인증인증");
+        System.out.println("인증에 성공했습니다");
 
-        // 인증된 사용자 정보 추출
         CustomOauth2User customUserDetails = (CustomOauth2User) authentication.getPrincipal();
         String oauthId = customUserDetails.getOauthId();
         Long userId = customUserDetails.getUserId();
         String name = customUserDetails.getName();
 
-        // 사용자의 권한 정보 추출
         Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
-        GrantedAuthority auth = iterator.next();
-        String role = auth.getAuthority();
+        String role = authorities.iterator().next().getAuthority();
 
-        // JWT 토큰 생성 (24일간 유효)
         String token = jwtUtil.createJwt(userId, name, oauthId, role, 60 * 60 * 1000L * 24 * 24);
         if (role.startsWith("ROLE_")) {
-            role = role.replace("ROLE_", ""); // 👉 USER 로 바꾸기
+            role = role.replace("ROLE_", "");
         }
-        // 쿠키 생성 및 설정 (JWT 포함)
+
         response.addCookie(createCookie("Authorization", token, request));
 
-        // 원래 요청된 URL 가져오기 (필요 시 활용)
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
+        // 👉 팝업 여부 확인
+        boolean isPopup = "true".equals(request.getParameter("popup"));
 
-        // 리디렉션할 URL 결정 (로컬 및 배포 환경에 따라 다름)
+        if (isPopup) {
+            // 👉 팝업 로그인 성공 시 HTML + postMessage
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("text/html;charset=UTF-8");
+
+            String html = """
+                    <!DOCTYPE html>
+                    <html>
+                      <body>
+                        <script>
+                          window.opener.postMessage(
+                            {
+                              type: 'OAUTH_SUCCESS',
+                              message: '로그인 성공'
+                            },
+                            'https://auctify.shop' // 배포 도메인
+                          );
+                          window.close();
+                        </script>
+                      </body>
+                    </html>
+                    """;
+
+            response.getWriter().write(html);
+            response.getWriter().flush();
+        } else {
+            // 👉 일반 리디렉션 흐름
+            String redirectUrl;
+            String referer = request.getHeader("Referer");
+
+            if (referer != null && referer.contains("localhost")) {
+                redirectUrl = "https://localhost:3000/";
+            } else {
+                redirectUrl = "https://www.auctify.shop/";
+            }
+
+            getRedirectStrategy().sendRedirect(request, response, redirectUrl);
+        }
 
 
-        String referer = request.getHeader("Referer");
-        String targetUrl;
-
-        System.out.println("referer  =================");
-        System.out.println(referer);
-        System.out.println(referer);
-        System.out.println("referer  =================");
-        System.out.println(request.getRequestURL());
-        System.out.println("request  =================");
-
-
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("text/html;charset=UTF-8");
-
+//    @Override
+//    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+//        System.out.println("인증에 성공했습니다 인증인증");
 //
-//        targetUrl = "https://localhost:3000/";
-
-        Map<String, Object> data = new HashMap<>();
-//        data.put("status", "success");
-//        data.put("message", "소셜 로그인 성공");
-//        // 필요하면 토큰, 사용자 정보 등도 추가 가능
-//        // data.put("user", authentication.getPrincipal());
+//        // 인증된 사용자 정보 추출
+//        CustomOauth2User customUserDetails = (CustomOauth2User) authentication.getPrincipal();
+//        String oauthId = customUserDetails.getOauthId();
+//        Long userId = customUserDetails.getUserId();
+//        String name = customUserDetails.getName();
 //
-//        response.getWriter().write(objectMapper.writeValueAsString(data));
-
-        String html = """
-<!DOCTYPE html>
-<html>
-  <body>
-    <script>
-      window.opener.postMessage(
-        {
-          type: 'OAUTH_SUCCESS',
-          message: '로그인 성공'
-        },
-        'https://localhost:3000' // 개발 환경일 경우
-      );
-      window.close();
-    </script>
-  </body>
-</html>
-""";
-
-        response.getWriter().write(html);
-        response.getWriter().flush();
-
-
-        // 나중에 주석 풀어야함
-//        if (referer != null &&  referer.contains("localhost")) {
-//            targetUrl = "https://localhost:3000/";
-//        } else {
-//            targetUrl = "https://www.auctify.shop/";
+//        // 사용자의 권한 정보 추출
+//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+//        Iterator<? extends GrantedAuthority> iterator = authorities.iterator();
+//        GrantedAuthority auth = iterator.next();
+//        String role = auth.getAuthority();
+//
+//        // JWT 토큰 생성 (24일간 유효)
+//        String token = jwtUtil.createJwt(userId, name, oauthId, role, 60 * 60 * 1000L * 24 * 24);
+//        if (role.startsWith("ROLE_")) {
+//            role = role.replace("ROLE_", ""); // 👉 USER 로 바꾸기
 //        }
-
-//        System.out.println("리디렉션할 URL: " + targetUrl);
-//        response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
-
-        // 설정된 URL로 리디렉션 수행
-        //getRedirectStrategy().sendRedirect(request, response, targetUrl);
-
-        // 필요 시 JSON 응답 형태로 변경 가능 (주석 처리된 예시 참고)
-        // response.setContentType("application/json");
-        // response.setCharacterEncoding("UTF-8");
-        // response.getWriter().write("{\"message\": \"success\", \"token\": \"" + token + "\"}");
+//        // 쿠키 생성 및 설정 (JWT 포함)
+//        response.addCookie(createCookie("Authorization", token, request));
+//
+//        // 원래 요청된 URL 가져오기 (필요 시 활용)
+//        SavedRequest savedRequest = requestCache.getRequest(request, response);
+//
+//        // 리디렉션할 URL 결정 (로컬 및 배포 환경에 따라 다름)
+//
+//
+//        String referer = request.getHeader("Referer");
+//        String targetUrl;
+//
+//        System.out.println("referer  =================");
+//        System.out.println(referer);
+//        System.out.println(referer);
+//        System.out.println("referer  =================");
+//        System.out.println(request.getRequestURL());
+//        System.out.println("request  =================");
+//
+//
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        response.setContentType("text/html;charset=UTF-8");
+//
+////
+////        targetUrl = "https://localhost:3000/";
+//
+//        Map<String, Object> data = new HashMap<>();
+////        data.put("status", "success");
+////        data.put("message", "소셜 로그인 성공");
+////        // 필요하면 토큰, 사용자 정보 등도 추가 가능
+////        // data.put("user", authentication.getPrincipal());
+////
+////        response.getWriter().write(objectMapper.writeValueAsString(data));
+//
+//        String html = """
+//<!DOCTYPE html>
+//<html>
+//  <body>
+//    <script>
+//      window.opener.postMessage(
+//        {
+//          type: 'OAUTH_SUCCESS',
+//          message: '로그인 성공'
+//        },
+//        'https://localhost:3000' // 개발 환경일 경우
+//      );
+//      window.close();
+//    </script>
+//  </body>
+//</html>
+//""";
+//
+//        response.getWriter().write(html);
+//        response.getWriter().flush();
+//
+//
+//        // 나중에 주석 풀어야함
+////        if (referer != null &&  referer.contains("localhost")) {
+////            targetUrl = "https://localhost:3000/";
+////        } else {
+////            targetUrl = "https://www.auctify.shop/";
+////        }
+//
+////        System.out.println("리디렉션할 URL: " + targetUrl);
+////        response.setHeader("Access-Control-Expose-Headers", "Set-Cookie");
+//
+//        // 설정된 URL로 리디렉션 수행
+//        //getRedirectStrategy().sendRedirect(request, response, targetUrl);
+//
+//        // 필요 시 JSON 응답 형태로 변경 가능 (주석 처리된 예시 참고)
+//        // response.setContentType("application/json");
+//        // response.setCharacterEncoding("UTF-8");
+//        // response.getWriter().write("{\"message\": \"success\", \"token\": \"" + token + "\"}");
+//    }
     }
-
     /**
      * 쿠키를 생성하는 유틸리티 메소드
      * @param key 쿠키의 이름 (여기서는 "Authorization")
