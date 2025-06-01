@@ -81,7 +81,7 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
                     window.opener.postMessage({
                       type: 'OAUTH_SUCCESS',
                       redirectTo: '/'
-                    }, 'http://localhost:3000'); // 👈 정확한 origin을 넣어야 함
+                    }, 'https://localhost:3000'); // 👈 정확한 origin을 넣어야 함
                     window.close();
                   } catch (e) {
                     document.body.innerHTML = '<p>창을 수동으로 닫아주세요.</p>';
