@@ -68,16 +68,27 @@ public class CustomSuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         response.setContentType("text/html;charset=UTF-8");
 
         String html = """
+                <!DOCTYPE html>
+                <html lang="ko">
+                  <head>
+                    <meta charset="UTF-8" />
+                    <title>Login Success</title>
+                    <link rel="icon" href="data:,">
+                  </head>
+                  <body>
                 <script>
-                  window.opener.postMessage(
-                    {
+                  try {
+                    window.opener.postMessage({
                       type: 'OAUTH_SUCCESS',
-                      redirectTo: '/', // ✅ 원래 창이 이동할 경로
-                    },
-                    window.opener.location.origin // 안전하게 현재 origin 사용
-                  );
-                  window.close();
+                      redirectTo: '/'
+                    }, 'http://localhost:3000'); // 👈 정확한 origin을 넣어야 함
+                    window.close();
+                  } catch (e) {
+                    document.body.innerHTML = '<p>창을 수동으로 닫아주세요.</p>';
+                  }
                 </script>
+                  </body>
+                </html>
                                     """;
 
         response.getWriter().write(html);
