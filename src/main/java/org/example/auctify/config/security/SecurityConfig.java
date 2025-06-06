@@ -76,6 +76,7 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/oauth2/**", "/login/oauth2/**", "/favicon.ico", "/presigned", "123",
                         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/auth/**","/api/pay/**").permitAll()
+                .requestMatchers("/sse/subscribe/**").hasRole("USER") // ✅ 추가!
                 .requestMatchers(HttpMethod.GET, "/api/user/{userId}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/auction/{goodsId}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/auction/search").permitAll()
