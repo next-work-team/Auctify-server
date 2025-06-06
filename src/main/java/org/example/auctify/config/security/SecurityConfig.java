@@ -1,6 +1,7 @@
 package org.example.auctify.config.security;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.example.auctify.jwt.JWTFilter;
 import org.example.auctify.jwt.JWTUtil;
 import org.example.auctify.oauth2.CustomSuccessHandler;
@@ -87,6 +88,18 @@ public class SecurityConfig {
                 .requestMatchers("/my").hasRole("USER")  // '/my' 경로는 USER 권한 필요
                 .anyRequest().authenticated());  // 그 외 모든 요청은 인증 필요
 
+        http
+                .exceptionHandling()
+                .authenticationEntryPoint((request, response, authException) -> {
+                    String uri = request.getRequestURI();
+                    if (uri.startsWith("/api/sse/")) {
+                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                        response.setContentType("application/json");
+                        response.getWriter().write("{\"error\": \"Unauthorized\"}");
+                    } else {
+                        response.sendRedirect("/login");
+                    }
+                });
         return http.build();
     }
 
