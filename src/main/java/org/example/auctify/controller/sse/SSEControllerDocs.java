@@ -12,8 +12,7 @@ public interface SSEControllerDocs {
 
 	@Operation(summary = "알림 SSE 구독", description = "알림 SSE 구독하는 API 입니다.")
 	SseEmitter subscribeNotification(
-			HttpServletRequest request
-			//@AuthenticationPrincipal CustomOauth2User user
+			@AuthenticationPrincipal CustomOauth2User user
 	);
 
 	@Operation(summary = "입찰 SSE 구독", description = "입찰 SSE 구독하는 API 입니다.")

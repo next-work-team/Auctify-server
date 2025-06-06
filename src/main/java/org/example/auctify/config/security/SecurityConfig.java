@@ -76,7 +76,6 @@ public class SecurityConfig {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/oauth2/**", "/login/oauth2/**", "/favicon.ico", "/presigned", "123",
                         "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/auth/**","/api/pay/**").permitAll()
-                .requestMatchers(HttpMethod.GET, "/api/sse/subscribe/**").hasRole("USER")
                 .requestMatchers(HttpMethod.GET, "/api/user/{userId}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/auction/{goodsId}").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/auction/search").permitAll()
@@ -89,18 +88,6 @@ public class SecurityConfig {
                 .requestMatchers("/my").hasRole("USER")  // '/my' 경로는 USER 권한 필요
                 .anyRequest().authenticated());  // 그 외 모든 요청은 인증 필요
 
-        http
-                .exceptionHandling()
-                .authenticationEntryPoint((request, response, authException) -> {
-                    String uri = request.getRequestURI();
-                    if (uri.contains("/sse/subscribe")) {
-                        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                        response.setContentType("application/json");
-                        response.getWriter().write("{\"error\": \"Unauthorized\"}");
-                    } else {
-                        response.sendRedirect("/login");
-                    }
-                });
         return http.build();
     }
 
