@@ -92,7 +92,7 @@ public class SecurityConfig {
                 .exceptionHandling()
                 .authenticationEntryPoint((request, response, authException) -> {
                     String uri = request.getRequestURI();
-                    if (uri.startsWith("/api/sse/")) {
+                    if (uri.contains("/sse/subscribe")) {
                         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                         response.setContentType("application/json");
                         response.getWriter().write("{\"error\": \"Unauthorized\"}");
