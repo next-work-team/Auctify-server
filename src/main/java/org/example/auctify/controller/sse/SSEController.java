@@ -28,7 +28,7 @@ public class SSEController implements SSEControllerDocs{
 	public static Map<Long, SseEmitter> sseEmittersNotification = new ConcurrentHashMap<>();
 	public static Map<String, SseEmitter> sseEmittersBid = new ConcurrentHashMap<>();
 
-
+	@GetMapping(value = "/subscribe/notification", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
 	public SseEmitter subscribeNotification(@AuthenticationPrincipal CustomOauth2User user) {
 		log.info("~~~ Notification SSE 요청 들어옴  ~~~");
 		Long userId = user.getUserId();
